@@ -7,7 +7,7 @@ ifeq ($(strip $(DEVKITPPC)),)
 $(error "Please set DEVKITPPC in your environment. export DEVKITPPC=<path to>devkitPPC)
 endif
 
-include $(DEVKITPPC)/gamecube_rules
+include $(DEVKITPPC)/wii_rules
 
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
@@ -26,10 +26,10 @@ INCLUDES	:=
 #---------------------------------------------------------------------------------
 
 MACHDEP = -DGEKKO -mcpu=750 -meabi -mhard-float
-CFLAGS	= -g -O2 -mogc -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS	= -g -O2 -mrvl -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
-LDFLAGS	=	-g $(MACHDEP) -mogc -Wl,-Map,$(notdir $@).map
+LDFLAGS	=	-g $(MACHDEP) -mrvl -Wl,-Map,$(notdir $@).map
 
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
