@@ -25,7 +25,6 @@ INCLUDES	:=
 # options for code generation
 #---------------------------------------------------------------------------------
 
-MACHDEP = -DGEKKO -mcpu=750 -meabi -mhard-float
 CFLAGS	= -g -O2 -mrvl -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
