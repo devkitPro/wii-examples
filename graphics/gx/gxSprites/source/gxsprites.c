@@ -41,7 +41,8 @@ int main( int argc, char **argv ){
 
 	u32 xfbHeight;
 
-	Mtx perspective, GXmodelView2D;
+	Mtx44 perspective;
+	Mtx GXmodelView2D;
 
 	u32	fb = 0; 	// initial framebuffer index
 	GXColor background = {0, 0, 0, 0xff};
