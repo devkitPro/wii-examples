@@ -24,7 +24,8 @@ int main( int argc, char **argv ){
 
 	u32 xfbHeight;
 
-	Mtx view,perspective; // view and perspective matrices
+	Mtx	view;
+	Mtx44 perspective;
 
 	u32	fb = 0; 	// initial framebuffer index
 	GXColor background = {0, 0, 0, 0xff};

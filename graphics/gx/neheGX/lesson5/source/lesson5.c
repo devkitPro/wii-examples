@@ -24,7 +24,8 @@ int main( int argc, char **argv ){
 
 	u32 xfbHeight;
 
-	Mtx view,perspective; // view and perspective matrices
+	Mtx view;
+	Mtx44 perspective;
 	Mtx model, modelview;
 
 	float rtri = 0.0f , rquad = 0.0f;
