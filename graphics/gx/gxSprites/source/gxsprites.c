@@ -14,12 +14,12 @@
 
 #include "ballsprites_bin.h"
  
-#define DEFAULT_FIFO_SIZE	(1024*1024)
+#define DEFAULT_FIFO_SIZE	(256*1024)
 
 static void *frameBuffer[2] = { NULL, NULL};
 static GXRModeObj *rmode;
 
-#define NUM_SPRITES 1024
+#define NUM_SPRITES 4096
 
 //simple sprite struct
 typedef struct {
@@ -50,7 +50,6 @@ int main( int argc, char **argv ){
 	int i;
 
 	VIDEO_Init();
-	WPAD_Init();
  
 	rmode = VIDEO_GetPreferredMode(NULL);
 	
@@ -118,14 +117,14 @@ int main( int argc, char **argv ){
 	guOrtho(perspective,0,479,0,639,0,300);
 	GX_LoadProjectionMtx(perspective, GX_ORTHOGRAPHIC);
 
-
+	WPAD_Init();
 
 	srand(time(NULL));
 
 	for(i = 0; i < NUM_SPRITES; i++) {
 		//random place and speed
 		sprites[i].x = rand() % (640 - 32 ) << 8;
-		sprites[i].y = rand() & (480 - 32 ) << 8 ;
+		sprites[i].y = rand() % (480 - 32 ) << 8 ;
 		sprites[i].dx = (rand() & 0xFF) + 0x100;
 		sprites[i].dy = (rand() & 0xFF) + 0x100;
 		sprites[i].image = rand() & 3;
