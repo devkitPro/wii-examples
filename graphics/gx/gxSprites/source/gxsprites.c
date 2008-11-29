@@ -11,15 +11,17 @@
 #include <math.h>
 #include <gccore.h>
 #include <wiiuse/wpad.h>
+#include <ogc/tpl.h>
 
-#include "ballsprites_bin.h"
+#include "textures_tpl.h"
+#include "textures.h"
  
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
 static void *frameBuffer[2] = { NULL, NULL};
 static GXRModeObj *rmode;
 
-#define NUM_SPRITES 4096
+#define NUM_SPRITES 1024
 
 //simple sprite struct
 typedef struct {
@@ -111,7 +113,10 @@ int main( int argc, char **argv ){
 
 
 	GX_InvalidateTexAll();
-	GX_InitTexObj(&texObj, (void*)ballsprites_bin, 64, 64, GX_TF_RGBA8, GX_CLAMP, GX_CLAMP, GX_FALSE);
+
+	TPLFile spriteTPL;
+	TPL_OpenTPLFromMemory(&spriteTPL, (void *)textures_tpl,textures_tpl_size);
+	TPL_GetTexture(&spriteTPL,ballsprites,&texObj);
 	GX_LoadTexObj(&texObj, GX_TEXMAP0);
 
 	guOrtho(perspective,0,479,0,639,0,300);
