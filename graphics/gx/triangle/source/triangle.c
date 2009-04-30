@@ -33,7 +33,7 @@ int	main(void) {
 	GXColor	backgroundColor	= {0, 0, 0,	255};
 	void *fifoBuffer = NULL;
   
-	VIDEO_Init();
+	VIDEO_Init();		
 	WPAD_Init();
 	
 	screenMode = VIDEO_GetPreferredMode(NULL);
@@ -45,6 +45,8 @@ int	main(void) {
 	VIDEO_SetPostRetraceCallback(copy_buffers);
 	VIDEO_SetBlack(FALSE);
 	VIDEO_Flush();
+
+
 
 	fifoBuffer = MEM_K0_TO_K1(memalign(32,FIFO_SIZE));
 	memset(fifoBuffer,	0, FIFO_SIZE);
