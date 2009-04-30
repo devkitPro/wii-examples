@@ -1,0 +1,1 @@
+<Project name="Triangle"><MagicFolder excludeFolders="CVS;.svn" filter="*.c;*.cpp" name="source" path="source\"><File path="triangle.c"></File></MagicFolder><MagicFolder excludeFolders="CVS;.svn" filter="*.h" name="include" path="include\"></MagicFolder><File path="Makefile"></File></Project>
