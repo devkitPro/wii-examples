@@ -11,7 +11,8 @@
 #include <math.h>
 #include <gccore.h>
 #include <wiiuse/wpad.h>
-#include "Glass_tpl.h"
+
+#include "glass_tpl.h"
 #include "glass.h"
  
 #define DEFAULT_FIFO_SIZE	(256*1024)
