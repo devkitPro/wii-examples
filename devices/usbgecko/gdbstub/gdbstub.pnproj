@@ -1,0 +1,1 @@
+<Project name="consoletest"><MagicFolder excludeFolders="CVS;.svn" filter="*.c" name="source" path="source\"><File path="gdbstub.c"></File></MagicFolder><MagicFolder excludeFolders="CVS;.svn" filter="*.h" name="include" path="include\"></MagicFolder><File path="Makefile"></File></Project>
