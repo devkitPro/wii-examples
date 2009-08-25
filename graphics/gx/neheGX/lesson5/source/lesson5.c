@@ -98,7 +98,7 @@ int main( int argc, char **argv ){
 
 	// setup our camera at the origin
 	// looking down the -z axis with y up
-	Vector cam = {0.0F, 0.0F, 0.0F},
+	guVector cam = {0.0F, 0.0F, 0.0F},
 			up = {0.0F, 1.0F, 0.0F},
 		  look = {0.0F, 0.0F, -1.0F};
 	guLookAt(view, &cam, &up, &look);
@@ -112,8 +112,8 @@ int main( int argc, char **argv ){
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
-	Vector triAxis = {0,1,0};
-	Vector cubeAxis = {1,1,1};
+	guVector triAxis = {0,1,0};
+	guVector cubeAxis = {1,1,1};
 
 	while(1) {
 

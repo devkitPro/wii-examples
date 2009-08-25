@@ -67,9 +67,9 @@ int	main(void) {
 	GX_CopyDisp(frameBuffer,GX_TRUE);
 	GX_SetDispCopyGamma(GX_GM_1_0);
 
-	Vector camera =	{0.0F, 0.0F, 0.0F};
-	Vector up =	{0.0F, 1.0F, 0.0F};
-	Vector look	= {0.0F, 0.0F, -1.0F};
+	guVector camera =	{0.0F, 0.0F, 0.0F};
+	guVector up =	{0.0F, 1.0F, 0.0F};
+	guVector look	= {0.0F, 0.0F, -1.0F};
 
 	guPerspective(projection, 60, 1.33F, 10.0F,	300.0F);
 	GX_LoadProjectionMtx(projection, GX_PERSPECTIVE);

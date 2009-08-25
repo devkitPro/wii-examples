@@ -50,7 +50,7 @@ int main(int argc,char **argv) {
 	Mtx44 perspective;
 	void *gpfifo = NULL;
 	GXColor background = {0, 0, 0, 0xff};
-	Vector cam = {0.0F, 0.0F, 0.0F},
+	guVector cam = {0.0F, 0.0F, 0.0F},
 			up = {0.0F, 1.0F, 0.0F},
 		  look = {0.0F, 0.0F, -1.0F};
 	TPLFile crateTPL;
@@ -134,7 +134,7 @@ int main(int argc,char **argv) {
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
-	Vector cubeAxis = {1,1,1};
+	guVector cubeAxis = {1,1,1};
 
 	while(1) {
 
