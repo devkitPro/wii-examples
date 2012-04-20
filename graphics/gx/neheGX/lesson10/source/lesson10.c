@@ -68,7 +68,6 @@ typedef struct tagSECTOR
 	TRIANGLE* triangle; // Ptr to array of tris
 } SECTOR;
 
-char* worldfile = "world.txt";
 SECTOR sector1;
 
 void DrawScene(Mtx v, GXTexObj texture);
@@ -236,16 +235,6 @@ int main( int argc, char **argv ){
 			}
 		}
 
-
-/*		tpad = PAD_SubStickY(0);
-		// Tilt up/down
-		if (((tpad > 8) || (tpad < -8)) && ((90 >= lookupdown) && (lookupdown >= -90))) {
-			zdepth -= ((f32)tpad * 0.01f);
-			lookupdown -= ((f32)tpad * 0.01f);
-			if (lookupdown > 90)  lookupdown = 90.0F;
-			if (lookupdown < -90) lookupdown = -90.0F;
-		}
-*/
 		// do this before drawing
 		GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 
