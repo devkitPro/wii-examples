@@ -12,7 +12,6 @@
 #include <gccore.h>
 #include <wiiuse/wpad.h>
 
-
 #include "mud_tpl.h"
 #include "mud.h"
 #include "world_txt.h"
@@ -69,7 +68,7 @@ typedef struct tagSECTOR
 	TRIANGLE* triangle; // Ptr to array of tris
 } SECTOR;
 
-char* worldfile = "/lesson10/world.txt";
+char* worldfile = "world.txt";
 SECTOR sector1;
 
 void DrawScene(Mtx v, GXTexObj texture);
@@ -98,9 +97,9 @@ int main( int argc, char **argv ){
 
 	// init the vi.
 	VIDEO_Init();
+	WPAD_Init();
 
 	rmode = VIDEO_GetPreferredMode(NULL);
-	WPAD_Init();
 	
 	// allocate 2 framebuffers for double buffering
 	frameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
@@ -195,32 +194,50 @@ int main( int argc, char **argv ){
 	while(1) {
 
 		WPAD_ScanPads();
+		if(WPAD_ButtonsDown(0) & WPAD_BUTTON_HOME) exit(0);
 
-		s8 tpad = PAD_StickX(0);
-		// Rotate left or right.
-		if ((tpad < -8) || (tpad > 8)) yrot -= (float)tpad / 50.f;
+		struct expansion_t data;
+
+		WPAD_Expansion(WPAD_CHAN_0, &data); // Get expansion info from the first wiimote
+
+
+		s8 tpad;
+
+		if (data.type == WPAD_EXP_NUNCHUK) { // Ensure there's a nunchuk
+
+			tpad = data.nunchuk.js.pos.x - data.nunchuk.js.center.x;
+			if ((tpad < -8) || (tpad > 8)) yrot -= (float)tpad / 50.f;
+			
+			tpad = data.nunchuk.js.pos.y - data.nunchuk.js.center.y;
 
 		// NOTE: walkbiasangle = head bob
-		tpad = PAD_StickY(0);
 		// Go forward.
 		if(tpad > 50) {
 			xpos -= (float)sin(DegToRad(yrot)) * 0.05f; // Move on the x-plane based on player direction
 			zpos -= (float)cos(DegToRad(yrot)) * 0.05f; // Move on the z-plane based on player direction
-			if (walkbiasangle >= 359.0f) walkbiasangle = 0.0f; // Bring walkbiasangle back around
-			else walkbiasangle += 10; // if walkbiasangle < 359 increase it by 10
+			if (walkbiasangle >= 359.0f) {
+				walkbiasangle = 0.0f; // Bring walkbiasangle back around
+			} else {
+				walkbiasangle += 10; // if walkbiasangle < 359 increase it by 10
+			}
 			walkbias = (float)sin(DegToRad(walkbiasangle))/20.0f;
 		}
 
 		// Go backward
-		if(tpad < -50) {
-			xpos += (float)sin(DegToRad(yrot)) * 0.05f;
-			zpos += (float)cos(DegToRad(yrot)) * 0.05f;
-			if (walkbiasangle <= 1.0f) walkbiasangle = 359.0f;
-			else walkbiasangle -= 10;
-			walkbias = (float)sin(DegToRad(walkbiasangle))/20.0f;
+			if(tpad < -50) {
+				xpos += (float)sin(DegToRad(yrot)) * 0.05f;
+				zpos += (float)cos(DegToRad(yrot)) * 0.05f;
+				if (walkbiasangle <= 1.0f) {
+					walkbiasangle = 359.0f;
+				} else {
+					walkbiasangle -= 10;
+				}
+				walkbias = (float)sin(DegToRad(walkbiasangle))/20.0f;
+			}
 		}
 
-		tpad = PAD_SubStickY(0);
+
+/*		tpad = PAD_SubStickY(0);
 		// Tilt up/down
 		if (((tpad > 8) || (tpad < -8)) && ((90 >= lookupdown) && (lookupdown >= -90))) {
 			zdepth -= ((f32)tpad * 0.01f);
@@ -228,11 +245,7 @@ int main( int argc, char **argv ){
 			if (lookupdown > 90)  lookupdown = 90.0F;
 			if (lookupdown < -90) lookupdown = -90.0F;
 		}
-
-		if ( PAD_ButtonsDown(0) & PAD_BUTTON_START) {
-			exit(0);
-		}
-
+*/
 		// do this before drawing
 		GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 
