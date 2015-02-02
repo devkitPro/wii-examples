@@ -26,7 +26,7 @@ INCLUDES	:=
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS		=	-g -O2 -std=gnu99 -Wall -Werror $(MACHDEP) $(INCLUDE)
+CFLAGS		=	-g -O2 -std=gnu99 -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
