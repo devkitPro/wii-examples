@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
 	printf("Configuring network ...\n");
 
 	// Configure the network interface
-	ret = if_config ( localip, netmask, gateway, TRUE);
+	ret = if_config ( localip, netmask, gateway, TRUE, 20);
 	if (ret>=0) {
 		printf ("network configured, ip: %s, gw: %s, mask %s\n", localip, gateway, netmask);
 
@@ -77,7 +77,7 @@ const static char http_get_index[] = "GET / HTTP/1.1\r\n";
 void *httpd (void *arg) {
 //---------------------------------------------------------------------------------
 
-	s32 sock, csock;
+	int sock, csock;
 	int ret;
 	u32	clientlen;
 	struct sockaddr_in client;
