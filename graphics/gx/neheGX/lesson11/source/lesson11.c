@@ -80,10 +80,11 @@ int main(int argc,char **argv)
 	GX_SetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
 	GX_SetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
  
-	if (rmode->aa)
-        GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
-    else
-        GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+	if (rmode->aa) {
+		GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
+	} else {
+		GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+	}
 
 	GX_SetCullMode(GX_CULL_NONE);
 	GX_CopyDisp(frameBuffer[fb],GX_TRUE);
@@ -247,8 +248,7 @@ void DrawFlag(Mtx view, GXTexObj texture) {
 	if (wiggle_count == 2 ) {
 		for (y = 0; y < 45; y++) { // Loop through the y plane
 			hold = points[0][y][2]; // Store current value one left side of wave
-			for (x = 0; x < 45; x++) {
-				// FIXME: Loop may access out-of-bounds subscript
+			for (x = 0; x < 44; x++) {
 				// Current wave value equals value to the right
 				points[x][y][2] = points[x+1][y][2];
 			}
