@@ -275,7 +275,7 @@ static lwpq_t oggplayer_queue = LWP_TQUEUE_NULL;
 static lwp_t h_oggplayer = LWP_THREAD_NULL;
 static int ogg_thread_running = 0;
 
-static void ogg_add_callback(int voice)
+static void ogg_add_callback(long voice)
 {
 	if (!ogg_thread_running)
 	{
