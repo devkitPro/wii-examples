@@ -43,9 +43,9 @@ float xpos, zpos;
 f32 zdepth=0.0f; // depth into the screen
 
 static GXColor LightColors[] = {
-        { 0xFF, 0xFF, 0xFF, 0xFF }, // Light color 1
-        { 0x80, 0x80, 0x80, 0xFF }, // Ambient 1
-        { 0x80, 0x80, 0x80, 0xFF }  // Material 1
+		{ 0xFF, 0xFF, 0xFF, 0xFF }, // Light color 1
+		{ 0x80, 0x80, 0x80, 0xFF }, // Ambient 1
+		{ 0x80, 0x80, 0x80, 0xFF }  // Material 1
 };
 
 // A vertex is the basic element of our room.
@@ -132,12 +132,12 @@ int main( int argc, char **argv ){
 	GX_SetDispCopyDst(rmode->fbWidth,xfbHeight);
 	GX_SetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
 	GX_SetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
- 
- 	if (rmode->aa)
-        GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
-    else
-        GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
-		
+
+	if (rmode->aa)
+		GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
+	else
+		GX_SetPixelFmt(GX_PF_RGB8_Z24, GX_ZC_LINEAR);
+
 	GX_SetCullMode(GX_CULL_NONE);
 	GX_CopyDisp(frameBuffer[fb],GX_TRUE);
 	GX_SetDispCopyGamma(GX_GM_1_0);
@@ -148,7 +148,7 @@ int main( int argc, char **argv ){
 	// so for ex. in the first call we are sending position data with
 	// 3 values X,Y,Z of size F32. scale sets the number of fractional
 	// bits for non float data.
-    GX_InvVtxCache();
+	GX_InvVtxCache();
 	GX_ClearVtxDesc();
 	GX_SetVtxDesc(GX_VA_POS, GX_DIRECT);
 	GX_SetVtxDesc(GX_VA_NRM, GX_DIRECT);
@@ -165,9 +165,9 @@ int main( int argc, char **argv ){
 	f32 w = rmode->viWidth;
 	f32 h = rmode->viHeight;
 	guLightPerspective(mv,45, (f32)w/h, 1.05F, 1.0F, 0.0F, 0.0F);
-    guMtxTrans(mr, 0.0F, 0.0F, -1.0F);
-    guMtxConcat(mv, mr, mv);
-    GX_LoadTexMtxImm(mv, GX_TEXMTX0, GX_MTX3x4);
+	guMtxTrans(mr, 0.0F, 0.0F, -1.0F);
+	guMtxConcat(mv, mr, mv);
+	GX_LoadTexMtxImm(mv, GX_TEXMTX0, GX_MTX3x4);
 
 	GX_InvalidateTexAll();
 	TPL_OpenTPLFromMemory(&mudTPL, (void *)mud_tpl,mud_tpl_size);
@@ -374,9 +374,9 @@ void SetLight(Mtx view,GXColor litcol, GXColor ambcol,GXColor matcol)
 	
 	// set number of rasterized color channels
 	GX_SetNumChans(1);
-    GX_SetChanCtrl(GX_COLOR0A0,GX_ENABLE,GX_SRC_REG,GX_SRC_REG,GX_LIGHT0,GX_DF_CLAMP,GX_AF_NONE);
-    GX_SetChanAmbColor(GX_COLOR0A0,ambcol);
-    GX_SetChanMatColor(GX_COLOR0A0,matcol);
+	GX_SetChanCtrl(GX_COLOR0A0,GX_ENABLE,GX_SRC_REG,GX_SRC_REG,GX_LIGHT0,GX_DF_CLAMP,GX_AF_NONE);
+	GX_SetChanAmbColor(GX_COLOR0A0,ambcol);
+	GX_SetChanMatColor(GX_COLOR0A0,matcol);
 }
 
 // Read in and parse world info.
