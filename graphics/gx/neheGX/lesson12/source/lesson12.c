@@ -101,10 +101,10 @@ int main(int argc,char **argv)
 
 	// init the flipper
 	GX_Init(gpfifo,DEFAULT_FIFO_SIZE);
- 
+
 	// clears the bg to color and clears the z buffer
 	GX_SetCopyClear(background,0x00FFFFFF);
- 
+
 	// other gx setup
 	GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 	yscale = GX_GetYScaleFactor(rmode->efbHeight,rmode->xfbHeight);
@@ -114,7 +114,7 @@ int main(int argc,char **argv)
 	GX_SetDispCopyDst(rmode->fbWidth,xfbHeight);
 	GX_SetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
 	GX_SetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
- 
+
 	if (rmode->aa) {
 		GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
 	} else {
@@ -148,7 +148,7 @@ int main(int argc,char **argv)
 	//set number of textures to generate
 	GX_SetNumTexGens(1);
 
-    GX_InvVtxCache();
+	GX_InvVtxCache();
 	GX_InvalidateTexAll();
 
 	TPL_OpenTPLFromMemory(&cubeTPL, (void *)Cube_tpl,Cube_tpl_size);
@@ -156,12 +156,12 @@ int main(int argc,char **argv)
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	guLookAt(view, &cam, &up, &look);
- 
+
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-    f32 w = rmode->viWidth;
-    f32 h = rmode->viHeight;
+	f32 w = rmode->viWidth;
+	f32 h = rmode->viHeight;
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
@@ -190,7 +190,7 @@ int main(int argc,char **argv)
 			VIDEO_SetBlack(FALSE);
 		}
 
-		// draw things	
+		// draw things
 		DrawScene(view);
 
 		GX_SetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
@@ -201,7 +201,7 @@ int main(int argc,char **argv)
 
 		VIDEO_SetNextFramebuffer(frameBuffer[fb]);
 		VIDEO_Flush();
- 		VIDEO_WaitVSync();
+		VIDEO_WaitVSync();
 		fb ^= 1;
 	}
 }
@@ -345,10 +345,10 @@ void SetLight(Mtx view)
 	GX_InitLightPos(&lobj,lpos.x,lpos.y,lpos.z);
 	GX_InitLightColor(&lobj,lightColor[0]);
 	GX_LoadLightObj(&lobj,GX_LIGHT0);
-	
+
 	// set number of rasterized color channels
 	GX_SetNumChans(1);
-    GX_SetChanCtrl(GX_COLOR0A0,GX_ENABLE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT0,GX_DF_CLAMP,GX_AF_NONE);
-    GX_SetChanAmbColor(GX_COLOR0A0,lightColor[1]);
-    GX_SetChanMatColor(GX_COLOR0A0,lightColor[2]);
+	GX_SetChanCtrl(GX_COLOR0A0,GX_ENABLE,GX_SRC_VTX,GX_SRC_VTX,GX_LIGHT0,GX_DF_CLAMP,GX_AF_NONE);
+	GX_SetChanAmbColor(GX_COLOR0A0,lightColor[1]);
+	GX_SetChanMatColor(GX_COLOR0A0,lightColor[2]);
 }

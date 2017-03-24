@@ -18,10 +18,10 @@ int main(int argc, char **argv) {
 
 	// Initialise the video system
 	VIDEO_Init();
-	
+
 	// Initialise the attached controllers
 	WPAD_Init();
-	
+
 	// Initialise the audio subsystem
 	AESND_Init(NULL);
 
@@ -31,16 +31,16 @@ int main(int argc, char **argv) {
 
 	// Allocate memory for the display in the uncached region
 	xfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-	
+
 	// Initialise the console, required for printf
 	console_init(xfb,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
-	
+
 	// Set up the video registers with the chosen mode
 	VIDEO_Configure(rmode);
-	
+
 	// Tell the video hardware where our display memory is
 	VIDEO_SetNextFramebuffer(xfb);
-	
+
 	// Make the display visible
 	VIDEO_SetBlack(FALSE);
 
@@ -57,10 +57,10 @@ int main(int argc, char **argv) {
 	// we can use variables for this with format codes too
 	// e.g. printf ("\x1b[%d;%dH", row, column );
 	printf("\x1b[2;0H");
-	
+
 
 	printf("Hello World!");
-	
+
 	MODPlay_Init(&play);
 	MODPlay_SetMOD(&play,technique_mod);
 	MODPlay_SetVolume(&play,63,63);

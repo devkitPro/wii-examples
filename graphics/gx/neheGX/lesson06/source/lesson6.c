@@ -64,10 +64,10 @@ int main(int argc,char **argv)
 
 	// init the flipper
 	GX_Init(gpfifo,DEFAULT_FIFO_SIZE);
- 
+
 	// clears the bg to color and clears the z buffer
 	GX_SetCopyClear(background, 0x00ffffff);
- 
+
 	// other gx setup
 	GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 	yscale = GX_GetYScaleFactor(rmode->efbHeight,rmode->xfbHeight);
@@ -77,7 +77,7 @@ int main(int argc,char **argv)
 	GX_SetDispCopyDst(rmode->fbWidth,xfbHeight);
 	GX_SetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
 	GX_SetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
- 
+
 	if (rmode->aa) {
 		GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
 	} else {
@@ -113,7 +113,7 @@ int main(int argc,char **argv)
 	// args: texcoord slot 0-7, matrix type, source to generate texture coordinates from, matrix to use
 	GX_SetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
 
-    GX_InvVtxCache();
+	GX_InvVtxCache();
 	GX_InvalidateTexAll();
 
 	TPL_OpenTPLFromMemory(&neheTPL, (void *)NeHe_tpl,NeHe_tpl_size);
@@ -121,12 +121,12 @@ int main(int argc,char **argv)
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	guLookAt(view, &cam, &up, &look);
- 
+
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-    f32 w = rmode->viWidth;
-    f32 h = rmode->viHeight;
+	f32 w = rmode->viWidth;
+	f32 h = rmode->viHeight;
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
@@ -148,7 +148,7 @@ int main(int argc,char **argv)
 		guMtxConcat(view,model,modelview);
 		// load the modelview matrix into matrix memory
 		GX_LoadPosMtxImm(modelview, GX_PNMTX0);
-		
+
 		GX_Begin(GX_QUADS, GX_VTXFMT0, 24);			// Draw a Cube
 
 			GX_Position3f32(-1.0f, 1.0f, -1.0f);	// Top Left of the quad (top)
@@ -225,11 +225,11 @@ int main(int argc,char **argv)
 			GX_Position3f32( -1.0f,1.0f, 1.0f);	// Bottom Left Of The Quad (Right)
 			GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
 			GX_TexCoord2f32(1.0f,1.0f);
-			GX_Position3f32( 1.0f,1.0f,1.0f);	// Bottom Right Of The Quad (Right)		
+			GX_Position3f32( 1.0f,1.0f,1.0f);	// Bottom Right Of The Quad (Right)
 			GX_Color3f32(1.0f,0.0f,1.0f);			// Set The Color To Violet
 			GX_TexCoord2f32(0.0f,1.0f);
 
-		GX_End();									// Done Drawing The Quad 
+		GX_End();									// Done Drawing The Quad
 
 		GX_SetZMode(GX_TRUE, GX_LEQUAL, GX_TRUE);
 		GX_SetColorUpdate(GX_TRUE);
@@ -243,7 +243,7 @@ int main(int argc,char **argv)
 			VIDEO_SetBlack(FALSE);
 		}
 		VIDEO_Flush();
- 		VIDEO_WaitVSync();
+		VIDEO_WaitVSync();
 		fb ^= 1;
 
 		rquad -= 0.15f;				// Decrease The Rotation Variable For The Quad     ( NEW )

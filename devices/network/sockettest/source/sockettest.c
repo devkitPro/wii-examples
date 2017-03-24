@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	char localip[16] = {0};
 	char gateway[16] = {0};
 	char netmask[16] = {0};
-	
+
 	xfb = initialise();
 
 	printf ("\nlibogc network demo\n");
@@ -36,10 +36,10 @@ int main(int argc, char **argv) {
 	if (ret>=0) {
 		printf ("network configured, ip: %s, gw: %s, mask %s\n", localip, gateway, netmask);
 
-		LWP_CreateThread(	&httd_handle,	/* thread handle */ 
-							httpd,			/* code */ 
+		LWP_CreateThread(	&httd_handle,	/* thread handle */
+							httpd,			/* code */
 							localip,		/* arg pointer for thread */
-							NULL,			/* stack base */ 
+							NULL,			/* stack base */
 							16*1024,		/* stack size */
 							50				/* thread priority */ );
 	} else {
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 		WPAD_ScanPads();
 
 		int buttonsDown = WPAD_ButtonsDown(0);
-		
+
 		if (buttonsDown & WPAD_BUTTON_HOME) {
 			exit(0);
 		}
@@ -84,7 +84,7 @@ void *httpd (void *arg) {
 	struct sockaddr_in server;
 	char temp[1026];
 	static int hits=0;
-	
+
 	clientlen = sizeof(client);
 
 	sock = net_socket (AF_INET, SOCK_STREAM, IPPROTO_IP);
@@ -100,7 +100,7 @@ void *httpd (void *arg) {
 		server.sin_port = htons (80);
 		server.sin_addr.s_addr = INADDR_ANY;
 		ret = net_bind (sock, (struct sockaddr *) &server, sizeof (server));
-		
+
 		if ( ret ) {
 
 			printf("Error %d binding socket!\n", ret);
@@ -112,11 +112,11 @@ void *httpd (void *arg) {
 				printf("Error %d listening!\n", ret);
 
 			} else {
-			
+
 				while(1) {
-	
+
 					csock = net_accept (sock, (struct sockaddr *) &client, &clientlen);
-				
+
 					if ( csock < 0 ) {
 						printf("Error connecting socket %d!\n", csock);
 						while(1);
@@ -152,11 +152,11 @@ void *initialise() {
 
 	VIDEO_Init();
 	WPAD_Init();
-	
+
 	rmode = VIDEO_GetPreferredMode(NULL);
 	framebuffer = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 	console_init(framebuffer,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
-	
+
 	VIDEO_Configure(rmode);
 	VIDEO_SetNextFramebuffer(framebuffer);
 	VIDEO_SetBlack(FALSE);
