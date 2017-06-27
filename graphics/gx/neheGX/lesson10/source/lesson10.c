@@ -15,16 +15,16 @@
 #include "mud_tpl.h"
 #include "mud.h"
 #include "world_txt.h"
- 
+
 #define DEFAULT_FIFO_SIZE	(256*1024)
 
-/* DATA FILE FORMAT 
+/* DATA FILE FORMAT
 Each triangle in our data file is declared as follows:
 
 X1 Y1 Z1 U1 V1
 X2 Y2 Z2 U2 V2
 X3 Y3 Z3 U3 V3 */
- 
+
 static void *frameBuffer[2] = { NULL, NULL};
 GXRModeObj *rmode;
 
@@ -99,7 +99,7 @@ int main( int argc, char **argv ){
 	WPAD_Init();
 
 	rmode = VIDEO_GetPreferredMode(NULL);
-	
+
 	// allocate 2 framebuffers for double buffering
 	frameBuffer[0] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 	frameBuffer[1] = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
@@ -116,13 +116,13 @@ int main( int argc, char **argv ){
 	void *gp_fifo = NULL;
 	gp_fifo = memalign(32,DEFAULT_FIFO_SIZE);
 	memset(gp_fifo,0,DEFAULT_FIFO_SIZE);
- 
+
 	// ...then init the flipper
 	GX_Init(gp_fifo,DEFAULT_FIFO_SIZE);
- 
+
 	// clears the bg to color and clears the z buffer
 	GX_SetCopyClear(background, 0x00ffffff);
- 
+
 	// other gx setup
 	GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 	yscale = GX_GetYScaleFactor(rmode->efbHeight,rmode->xfbHeight);
@@ -172,14 +172,14 @@ int main( int argc, char **argv ){
 	GX_InvalidateTexAll();
 	TPL_OpenTPLFromMemory(&mudTPL, (void *)mud_tpl,mud_tpl_size);
 	TPL_GetTexture(&mudTPL,mud,&texture);
- 
+
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	guVector cam = {0.0F, 0.0F, 0.0F},
 			up = {0.0F, 1.0F, 0.0F},
 		  look = {0.0F, 0.0F, -1.0F};
 	guLookAt(view, &cam, &up, &look);
- 
+
 
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
@@ -189,7 +189,7 @@ int main( int argc, char **argv ){
 
 	// get the room ready to render
 	SetupWorld();
- 
+
 	while(1) {
 
 		WPAD_ScanPads();
@@ -206,7 +206,7 @@ int main( int argc, char **argv ){
 
 			tpad = data.nunchuk.js.pos.x - data.nunchuk.js.center.x;
 			if ((tpad < -8) || (tpad > 8)) yrot -= (float)tpad / 50.f;
-			
+
 			tpad = data.nunchuk.js.pos.y - data.nunchuk.js.center.y;
 
 		// NOTE: walkbiasangle = head bob
@@ -250,13 +250,13 @@ int main( int argc, char **argv ){
 
 		// do this stuff after drawing
 		GX_DrawDone();
-		
+
 		fb ^= 1; // flip framebuffer
 
 		VIDEO_SetNextFramebuffer(frameBuffer[fb]);
- 
+
 		VIDEO_Flush();
- 
+
 		VIDEO_WaitVSync();
 
 
@@ -310,7 +310,7 @@ void DrawScene(Mtx v, GXTexObj texture) {
 
 	//glTranslatef(xtrans,ytrans,ztrans);
 	//guMtxIdentity(m);
-	//guMtxTrans(m, xtrans, ytrans, ztrans);	
+	//guMtxTrans(m, xtrans, ytrans, ztrans);
 	//guMtxConcat(v,m,v);
 
 	// load the modelview matrix into matrix memory
@@ -371,7 +371,7 @@ void SetLight(Mtx view,GXColor litcol, GXColor ambcol,GXColor matcol)
 	GX_InitLightPos(&lobj,lpos.x,lpos.y,lpos.z);
 	GX_InitLightColor(&lobj,litcol);
 	GX_LoadLightObj(&lobj,GX_LIGHT0);
-	
+
 	// set number of rasterized color channels
 	GX_SetNumChans(1);
 	GX_SetChanCtrl(GX_COLOR0A0,GX_ENABLE,GX_SRC_REG,GX_SRC_REG,GX_LIGHT0,GX_DF_CLAMP,GX_AF_NONE);

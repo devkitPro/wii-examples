@@ -13,7 +13,7 @@
 #include <wiiuse/wpad.h>
 
 #include "startex_tpl.h"
-#include "startex.h" 
+#include "startex.h"
 
 #define DEFAULT_FIFO_SIZE	(256*1024)
 #define NUM_STARS			50
@@ -33,7 +33,7 @@ typedef struct tagtexdef
 	void *nextdef;
 } texdef;
 
-typedef struct 
+typedef struct
 {
 	u8 r,g,b;
 	f32 dist;
@@ -88,10 +88,10 @@ int main(int argc,char **argv)
 
 	// init the flipper
 	GX_Init(gpfifo,DEFAULT_FIFO_SIZE);
- 
+
 	// clears the bg to color and clears the z buffer
 	GX_SetCopyClear(background, 0x00ffffff);
- 
+
 	// other gx setup
 	GX_SetViewport(0,0,rmode->fbWidth,rmode->efbHeight,0,1);
 	yscale = GX_GetYScaleFactor(rmode->efbHeight,rmode->xfbHeight);
@@ -101,7 +101,7 @@ int main(int argc,char **argv)
 	GX_SetDispCopyDst(rmode->fbWidth,xfbHeight);
 	GX_SetCopyFilter(rmode->aa,rmode->sample_pattern,GX_TRUE,rmode->vfilter);
 	GX_SetFieldMode(rmode->field_rendering,((rmode->viHeight==2*rmode->xfbHeight)?GX_ENABLE:GX_DISABLE));
- 
+
 	if (rmode->aa) {
 		GX_SetPixelFmt(GX_PF_RGB565_Z16, GX_ZC_LINEAR);
 	} else {
@@ -138,19 +138,19 @@ int main(int argc,char **argv)
 	GX_SetTexCoordGen(GX_TEXCOORD0, GX_TG_MTX2x4, GX_TG_TEX0, GX_IDENTITY);
 
 
-    GX_InvVtxCache();
+	GX_InvVtxCache();
 	GX_InvalidateTexAll();
 	TPL_OpenTPLFromMemory(&starTPL, (void *)startex_tpl,startex_tpl_size);
 	TPL_GetTexture(&starTPL,startex,&texture);
 	// setup our camera at the origin
 	// looking down the -z axis with y up
 	guLookAt(view, &cam, &up, &look);
- 
+
 	// setup our projection matrix
 	// this creates a perspective matrix with a view angle of 90,
 	// and aspect ratio based on the display resolution
-    f32 w = rmode->viWidth;
-    f32 h = rmode->viHeight;
+	f32 w = rmode->viWidth;
+	f32 h = rmode->viHeight;
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
@@ -200,7 +200,7 @@ int main(int argc,char **argv)
 				GX_Position3f32(-1.0f, 1.0f, 0.0f);				// Bottom Left of the quad (top)
 				GX_Color3u8(stars[i].r,stars[i].g,stars[i].b);	// Set The Color To Green
 				GX_TexCoord2f32(0.0f,1.0f);
-			GX_End();											// Done Drawing The Quad 
+			GX_End();											// Done Drawing The Quad
 
 			spin += 0.01f;
 			stars[i].ang += (f32)i/(f32)NUM_STARS;
@@ -229,7 +229,7 @@ int main(int argc,char **argv)
 			VIDEO_SetBlack(FALSE);
 		}
 		VIDEO_Flush();
- 		VIDEO_WaitVSync();
+		VIDEO_WaitVSync();
 		fb ^= 1;
 	}
 }

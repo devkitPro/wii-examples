@@ -138,7 +138,7 @@ $(OUTPUT).elf: $(OFILES)
 $(OFILES_SOURCES) : $(HFILES)
 
 #---------------------------------------------------------------------------------
-# This rule links in binary data with the .jpg extension
+# This rule links in binary data with the .ogg extension
 #---------------------------------------------------------------------------------
 %.ogg.o	%_ogg.h :	%.ogg
 #---------------------------------------------------------------------------------

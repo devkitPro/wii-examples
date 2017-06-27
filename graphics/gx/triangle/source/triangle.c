@@ -32,10 +32,10 @@ int	main(void) {
 	Mtx	projection;
 	GXColor	backgroundColor	= {0, 0, 0,	255};
 	void *fifoBuffer = NULL;
-  
-	VIDEO_Init();		
+
+	VIDEO_Init();
 	WPAD_Init();
-	
+
 	screenMode = VIDEO_GetPreferredMode(NULL);
 
 	frameBuffer	= MEM_K0_TO_K1(SYS_AllocateFramebuffer(screenMode));
@@ -103,11 +103,11 @@ int	main(void) {
 void update_screen(	Mtx	viewMatrix )
 {
 	Mtx	modelView;
-	
+
 	guMtxIdentity(modelView);
 	guMtxTransApply(modelView, modelView, 0.0F,	0.0F, -50.0F);
 	guMtxConcat(viewMatrix,modelView,modelView);
-	
+
 	GX_LoadPosMtxImm(modelView,	GX_PNMTX0);
 
 	GX_Begin(GX_TRIANGLES, GX_VTXFMT0, 3);
@@ -118,7 +118,7 @@ void update_screen(	Mtx	viewMatrix )
 	GX_Color1x8(1);
 	GX_Position1x8(2);
 	GX_Color1x8(2);
-	
+
 	GX_End();
 
 	GX_DrawDone();
