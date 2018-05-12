@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 	WPAD_Init();
 
 	// Initialise the audio subsystem
-	ASND_Init(NULL);
+	ASND_Init();
 	MP3Player_Init();
 
 	// Obtain the preferred video mode from the system
