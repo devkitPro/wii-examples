@@ -33,7 +33,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lwiiuse -lbte -lvorbisdec -lasnd -logc -lm
+LIBS	:=	-lwiiuse -lbte -lvorbisdec -logg -lasnd -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
@@ -101,7 +101,11 @@ ifeq (,$(wildcard $(DEVKITPRO)/portlibs/ppc/include/tremor/ivorbiscodec.h))
 $(BUILD):
 	@echo
 	@echo "*------------------------------------------------------------------------------------------*"
-	@echo "Please install libtremor from https://sourceforge.net/projects/devkitpro/files/portlibs/ppc/"
+	@echo
+	@echo "Please install libvorbisidec using (dkp-)pacman -S "
+	@echo
+	@echo "See https://devkitpro.org/viewtopic.php?f=13&t=8702 for details"
+	@echo
 	@echo "*------------------------------------------------------------------------------------------*"
 	@echo
 else
