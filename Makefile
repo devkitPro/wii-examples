@@ -1,13 +1,27 @@
-SUBDIRS:= `ls | egrep -v '^(CVS)$$'`
-
 DATESTRING	:=	$(shell date +%Y)$(shell date +%m)$(shell date +%d)
 
-all:
-	@for i in $(SUBDIRS); do if test -e $$i/Makefile ; then $(MAKE) -C $$i || { exit 1;} fi; done;
+MAKEFILES := $(shell find . -mindepth 2 -name Makefile)
 
+#---------------------------------------------------------------------------------
+all: examples
+#---------------------------------------------------------------------------------
+	@rm -fr bin
+	@mkdir -p bin
+	@find . -name "*.dol" ! -path "./bin/*" -exec cp -fv {} bin \;
+
+#---------------------------------------------------------------------------------
+examples:
+#---------------------------------------------------------------------------------
+	@for i in $(MAKEFILES); do $(MAKE) -C `dirname $$i` || exit 1; done;
+
+#---------------------------------------------------------------------------------
 clean:
+#---------------------------------------------------------------------------------
+	@rm -fr bin
 	@rm -f *.bz2
-	@for i in $(SUBDIRS); do if test -e $$i/Makefile ; then $(MAKE) -C $$i clean || { exit 1;} fi; done;
+	@for i in $(MAKEFILES); do $(MAKE) -C `dirname $$i` clean || exit 1; done;
 
+#---------------------------------------------------------------------------------
 dist: clean
-	@tar --exclude=.svn -cvjf wii-examples-$(DATESTRING).tar.bz2 *
+#---------------------------------------------------------------------------------
+	@tar -cvjf wii-examples-$(DATESTRING).tar.bz2 *
