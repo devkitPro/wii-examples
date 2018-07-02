@@ -7,7 +7,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
