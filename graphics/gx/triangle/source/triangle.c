@@ -29,7 +29,7 @@ static void	copy_buffers(u32 unused);
 
 int	main(void) {
 	Mtx	view;
-	Mtx	projection;
+	Mtx44	projection;
 	GXColor	backgroundColor	= {0, 0, 0,	255};
 	void *fifoBuffer = NULL;
 
