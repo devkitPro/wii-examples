@@ -1,0 +1,3 @@
+[submodule "DevkitPPC-CMake"]
+	path = DevkitPPC-CMake
+	url = https://github.com/LawG4/DevkitPPC-CMake.git
