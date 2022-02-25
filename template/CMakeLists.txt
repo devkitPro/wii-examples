@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 # We won't usually be this verbose
 if(NOT ${CMAKE_DEVKITWII_FOUND})
 	message(WARNING "Wii Toolchain not found yet! Attempt to include the submodule")
-	include(${CMAKE_CURRENT_LIST_DIR}/DevkitPPC-CMake/DevkitWiiToolchain.cmake)
+	include(${CMAKE_CURRENT_LIST_DIR}/../DevkitPPC-CMake/DevkitWiiToolchain.cmake)
 	if(NOT ${CMAKE_DEVKITWII_FOUND})
 		message(FATAL_ERROR "Wii toolchain not being used, set -DCMAKE_TOOLCHAIN_FILE=\"PATH TO TOOLCHAIN\"")
 	endif()
