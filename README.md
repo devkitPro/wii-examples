@@ -35,7 +35,7 @@ cmake --build .
 
 ### Dependencies 
 
-DevkitPPC : https://wiibrew.org/wiki/DevkitPPC
-Ninja : https://ninja-build.org
-CMake : https://cmake.org/install/
-Dolphin : https://dolphin-emu.org
+* DevkitPPC : https://wiibrew.org/wiki/DevkitPPC
+* Ninja : https://ninja-build.org
+* CMake : https://cmake.org/install/
+* Dolphin : https://dolphin-emu.org
