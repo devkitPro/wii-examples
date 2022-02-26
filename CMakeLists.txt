@@ -22,3 +22,4 @@ message(STATUS "Start building the wii examples")
 # Add all of the cmake subdirectories one at a time
 # This calls all of the lower cmake lists in those directories
 add_subdirectory(template)
+add_subdirectory(audio)
