@@ -12,6 +12,8 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 	endif()
 endif()
 
+message(STATUS "Using Toolchain file \"${CMAKE_TOOLCHAIN_FILE}\"")
+
 # Create an interface library that supports C and C++
 # The interface property means that we don't generate an actual library
 project(Wii-Examples VERSION 0.1.0 LANGUAGES CXX C)
@@ -21,6 +23,8 @@ message(STATUS "Start building the wii examples")
 
 # Add all of the cmake subdirectories one at a time
 # This calls all of the lower cmake lists in those directories
+message(STATUS "Template --------------")
 add_subdirectory(template)
 add_subdirectory(audio)
 add_subdirectory(devices)
+add_subdirectory(filesystem)
