@@ -4,7 +4,7 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 	message(FATAL_ERROR "You have not provided the path to the WiiToolchain file")
 endif()
 
-message(STATUS "Devices ------------")
+message(STATUS "Devices ---------------")
 add_subdirectory(network)
 add_subdirectory(usbgecko)
 add_subdirectory(usbkeyboard)

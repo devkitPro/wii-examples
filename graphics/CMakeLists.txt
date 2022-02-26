@@ -4,7 +4,5 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 	message(FATAL_ERROR "You have not provided the path to the WiiToolchain file")
 endif()
 
-message(STATUS "Audio -----------------")
-add_subdirectory(modplay)
-add_subdirectory(mp3player)
-add_subdirectory(oggplayer)
+message(STATUS "Graphics --------------")
+
