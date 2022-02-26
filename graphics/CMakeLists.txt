@@ -5,4 +5,4 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 endif()
 
 message(STATUS "Graphics --------------")
-
+add_subdirectory(triangle)
