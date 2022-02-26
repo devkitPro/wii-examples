@@ -6,3 +6,4 @@ endif()
 
 message(STATUS "Graphics --------------")
 add_subdirectory(triangle)
+add_subdirectory(gxSprites)

@@ -5,13 +5,15 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 endif()
 include(PPCUtilsAll)
 
-message(STATUS "Adding Example : Triangle")
+message(STATUS "Adding Example : GXSprites")
 
-# Add a Triangle project and executable
-project(Triangle)
-add_executable(Triangle.elf source/triangle.c)
+# Add a GXSprites project and executable
+project(GXSprites)
+add_executable(GXSprites.elf source/gxsprites.c)
+
+devkit_target_add_texture_sources(GXSprites.elf ${CMAKE_CURRENT_LIST_DIR}/textures/textures.scf)
 
 # Find and link to libogc
 find_package(libogc REQUIRED)
-target_link_libraries(Triangle.elf PRIVATE libogc::libogc)
-target_include_directories(Triangle.elf PRIVATE ${libogc_INCLUDE_DIRS})
+target_link_libraries(GXSprites.elf PRIVATE libogc::libogc)
+target_include_directories(GXSprites.elf PRIVATE ${libogc_INCLUDE_DIRS})
