@@ -6,3 +6,4 @@ endif()
 
 message(STATUS "Audio ------------")
 add_subdirectory(modplay)
+add_subdirectory(mp3player)
