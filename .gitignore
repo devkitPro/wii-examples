@@ -1,3 +1,5 @@
 *.dol
 *.elf
 build/
+qtBuild/
+CMakeLists.txt.user
