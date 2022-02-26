@@ -6,3 +6,4 @@ endif()
 
 message(STATUS "Devices ------------")
 add_subdirectory(network)
+add_subdirectory(usbgecko)
