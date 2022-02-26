@@ -15,3 +15,6 @@ add_executable(NeheGX_05.elf source/lesson5.c)
 find_package(libogc REQUIRED)
 target_link_libraries(NeheGX_05.elf PRIVATE libogc::libogc)
 target_include_directories(NeheGX_05.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name NeheGX_05_emu with default settings
+devkit_target_dolphin_auto(NeheGX_05.elf)

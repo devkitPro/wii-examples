@@ -12,6 +12,15 @@ if(NOT ${CMAKE_DEVKITWII_FOUND})
 	endif()
 endif()
 
+# The toolchain supplies a couple cmake modules
+# Luckily the path to those modules is added to the module path
+# Which means we can include the modules we want with a simple command
+# The modules are located in DvkitPPC-CMake/Utilities
+# They each handle something unique, but we can also add them all in
+# one go 
+include(PPCUtilsAll)
+
+
 message(STATUS "Adding Example : Template")
 
 # Create a project and an executable inside that project 
@@ -42,4 +51,22 @@ find_package(libogc REQUIRED)
 target_link_libraries(Template.elf PRIVATE libogc::libogc)
 target_include_directories(Template.elf PRIVATE ${libogc_INCLUDE_DIRS})
 
-
+# In order to make it easeir for a user to run their demo on dolphin 
+# We supply a helper function to add a target to their demo
+# there are three versions of this
+#
+#	devkit_target_dolphin_explicit - Have full control of how dolphin runs
+#		param target : elf target to run on dolphin
+#		param name	 : Name of the target to run dolphin
+#		param args   : command line args to pass to dolphin
+#
+#	devkit_target_dolphin_named - Specify the name of the target that runs dolphin with default params
+#		param target : elf target to run on dolphin
+#		param name	 : Name of the target to run dolphin
+#
+# 	devkit_target_dolphin_auto - Adds a run target by the name target_emu with default params
+#		param target : elf target to run on dolphin
+#
+# Right now we're happy with the default arguments 
+# But we'd like to name the target run for convinenece 
+devkit_target_dolphin_named(Template.elf run)

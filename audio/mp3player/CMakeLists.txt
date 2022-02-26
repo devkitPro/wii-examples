@@ -17,3 +17,6 @@ devkit_target_add_binary_sources(Mp3Player.elf ${CMAKE_CURRENT_LIST_DIR}/data/sa
 find_package(libogc REQUIRED)
 target_link_libraries(Mp3Player.elf PRIVATE libogc::libogc libogc::mad)
 target_include_directories(Mp3Player.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name Mp3Player_emu with default settings
+devkit_target_dolphin_auto(Mp3Player.elf)

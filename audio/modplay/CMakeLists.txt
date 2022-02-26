@@ -21,3 +21,6 @@ devkit_target_add_binary_sources(Modplay.elf ${CMAKE_CURRENT_LIST_DIR}/data/tech
 find_package(libogc REQUIRED)
 target_link_libraries(Modplay.elf PRIVATE libogc::libogc libogc::modplay)
 target_include_directories(Modplay.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name Modplay_emu with default settings
+devkit_target_dolphin_auto(Modplay.elf)

@@ -15,3 +15,6 @@ add_executable(Triangle.elf source/triangle.c)
 find_package(libogc REQUIRED)
 target_link_libraries(Triangle.elf PRIVATE libogc::libogc)
 target_include_directories(Triangle.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name Triangle_emu with default settings
+devkit_target_dolphin_auto(Triangle.elf)

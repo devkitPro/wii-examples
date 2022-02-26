@@ -17,3 +17,6 @@ devkit_target_add_texture_sources(NeheGX_09.elf ${CMAKE_CURRENT_LIST_DIR}/textur
 find_package(libogc REQUIRED)
 target_link_libraries(NeheGX_09.elf PRIVATE libogc::libogc)
 target_include_directories(NeheGX_09.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name NeheGX_09_emu with default settings
+devkit_target_dolphin_auto(NeheGX_09.elf)

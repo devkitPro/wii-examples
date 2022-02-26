@@ -17,3 +17,6 @@ devkit_target_add_texture_sources(GXSprites.elf ${CMAKE_CURRENT_LIST_DIR}/textur
 find_package(libogc REQUIRED)
 target_link_libraries(GXSprites.elf PRIVATE libogc::libogc)
 target_include_directories(GXSprites.elf PRIVATE ${libogc_INCLUDE_DIRS})
+
+# Add target to run the executable with name GXSprites_emu with default settings
+devkit_target_dolphin_auto(GXSprites.elf)
