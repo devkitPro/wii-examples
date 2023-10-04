@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 	VIDEO_SetNextFramebuffer(xfb);
 
 	// Make the display visible
-	VIDEO_SetBlack(FALSE);
+	VIDEO_SetBlack(true);
 
 	// Flush the video register changes to the hardware
 	VIDEO_Flush();
@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 	struct dirent *pent;
 	struct stat statbuf;
 
-	pdir=opendir("/");
+	pdir=opendir(".");
 
 	if (!pdir){
 		printf ("opendir() failure; terminating\n");
