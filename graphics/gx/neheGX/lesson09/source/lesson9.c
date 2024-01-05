@@ -226,7 +226,7 @@ int main(int argc,char **argv)
 		VIDEO_SetNextFramebuffer(frameBuffer[fb]);
 		if(first_frame) {
 			first_frame = 0;
-			VIDEO_SetBlack(FALSE);
+			VIDEO_SetBlack(false);
 		}
 		VIDEO_Flush();
 		VIDEO_WaitVSync();

@@ -120,7 +120,7 @@ int main( int argc, char **argv ){
 
 	VIDEO_Configure(rmode);
 	VIDEO_SetNextFramebuffer(frameBuffer[fb]);
-	VIDEO_SetBlack(FALSE);
+	VIDEO_SetBlack(false);
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
 	if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
@@ -247,7 +247,7 @@ int main( int argc, char **argv ){
 		// Update all particles.
 		for ( i = 0; i < MAX_PARTICLES; i++ )
 		{
-			if ( particle_array[i].active == TRUE )
+			if ( particle_array[i].active )
 			{
 				f32 x = particle_array[i].x; // Get the particle values.
 				f32 y = particle_array[i].y;

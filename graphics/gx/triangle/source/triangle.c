@@ -43,7 +43,7 @@ int	main(void) {
 	VIDEO_Configure(screenMode);
 	VIDEO_SetNextFramebuffer(frameBuffer);
 	VIDEO_SetPostRetraceCallback(copy_buffers);
-	VIDEO_SetBlack(FALSE);
+	VIDEO_SetBlack(false);
 	VIDEO_Flush();
 
 

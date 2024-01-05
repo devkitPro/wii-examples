@@ -107,7 +107,7 @@ int main( int argc, char **argv ){
 	// configure video and wait for the screen to blank
 	VIDEO_Configure(rmode);
 	VIDEO_SetNextFramebuffer(frameBuffer[fb]);
-	VIDEO_SetBlack(FALSE);
+	VIDEO_SetBlack(false);
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
 	if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
