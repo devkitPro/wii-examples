@@ -72,8 +72,8 @@ int main(int argc, char **argv) {
 		// this is a "one shot" state which will not fire again until the button has been released
 		u32 pressed = WPAD_ButtonsDown(0);
 
-		char key = getchar();
-
+		int key = getchar();
+		putchar(key);
 		// We return to the launcher application via exit
 		if ( pressed & WPAD_BUTTON_HOME ) quitapp=true;
 
