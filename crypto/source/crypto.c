@@ -21,13 +21,15 @@ void wait_for_input()
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();
+		PAD_ScanPads();
 
 		// WPAD_ButtonsDown tells us which buttons were pressed in this loop
 		// this is a "one shot" state which will not fire again until the button has been released
 		u32 pressed = WPAD_ButtonsDown(0);
+		u32 gcPressed = PAD_ButtonsDown(0);
 
 		// We return to the launcher application via exit
-		if ( pressed & WPAD_BUTTON_HOME ) exit(0);
+		if ( pressed & WPAD_BUTTON_HOME || gcPressed & PAD_BUTTON_START ) exit(0);
 
 		// Wait for the next frame
 		VIDEO_WaitVSync();
@@ -52,6 +54,7 @@ int main(int argc, char **argv) {
 
 	// This function initialises the attached controllers
 	WPAD_Init();
+	PAD_Init();
 
 	// Obtain the preferred video mode from the system
 	// This will correspond to the settings in the Wii menu
@@ -104,8 +107,9 @@ int main(int argc, char **argv) {
 		cleanup_and_wait();
 	}
 	
-	input = memalign(32, messageSize);
-	buffer = memalign(32, messageSize);
+	//the sha engine requires data to be 64-byte aligned.
+	input = memalign(64, messageSize);
+	buffer = memalign(64, messageSize);
 	if(input == NULL || buffer == NULL)
 	{
 		printf("failed to allocate the buffers");
@@ -141,6 +145,7 @@ int main(int argc, char **argv) {
 	
 	SHA_InitializeContext(&context);
 	SHA_Calculate(&context, input, messageSize, hash);
+	DCFlushRange(hash, sizeof(hash));
 	printf("decrypted hash : %08X%08X%08X%08X\n", hash[0], hash[1], hash[2], hash[3]);
 
 	//cleanup everything
