@@ -10,9 +10,10 @@ static void *xfb = NULL;
 static GXRModeObj *rmode = NULL;
 static void* input = NULL;
 static void* buffer = NULL;
+static void* iv = NULL;
 static sha_context context ATTRIBUTE_ALIGN(32);
 static const u8 key[0x10]			= { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
-static const u8 iv[0x10]			= { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F };
+static const u8 initialIv[0x10]		= { 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x2A, 0x2B, 0x2C, 0x2D, 0x2E, 0x2F };
 static const u32 expectedSha1[4] 	= { 0x9E4EE857, 0x2F0568A6, 0x206743F4, 0x2BD62721 };
 static u32 hash[4] = {};
 void wait_for_input()
@@ -110,6 +111,7 @@ int main(int argc, char **argv) {
 	//the sha engine requires data to be 64-byte aligned.
 	input = memalign(64, messageSize);
 	buffer = memalign(64, messageSize);
+    iv = memalign(32, sizeof(initialIv));
 	if(input == NULL || buffer == NULL)
 	{
 		printf("failed to allocate the buffers");
@@ -117,6 +119,7 @@ int main(int argc, char **argv) {
 	}
 	
 	memset(buffer, 0, messageSize);
+    memcpy(iv, initialIv, sizeof(initialIv));
 	memset(input, 0xA5A5A5A5, messageSize);
 	
 	s32 ret = AES_Encrypt(key, 0x10, iv, 0x10, input, buffer, messageSize);
@@ -136,12 +139,22 @@ int main(int argc, char **argv) {
 	printf("calculated hash : %08X%08X%08X%08X\n", hash[0], hash[1], hash[2], hash[3]);
 	printf("expected hash   : %08X%08X%08X%08X\n", expectedSha1[0], expectedSha1[1], expectedSha1[2], expectedSha1[3]);
 	
+    memcpy(iv, initialIv, sizeof(initialIv));
 	ret = AES_Decrypt(key, 0x10, iv, 0x10, buffer, input, messageSize);
 	if(ret < 0)
 	{
 		printf("failed to decrypt input");
 		cleanup_and_wait();
 	}
+
+    for(int i = 0; i*4 < messageSize; i++)
+    {
+        if(((u32*)input)[i] != 0xA5A5A5A5)
+        {
+            printf("decrypted data isn't correct : %d - %08X", i, ((u32*)input)[i]);
+            cleanup_and_wait();  
+        }
+    }
 	
 	SHA_InitializeContext(&context);
 	SHA_Calculate(&context, input, messageSize, hash);
