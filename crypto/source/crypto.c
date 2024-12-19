@@ -109,8 +109,8 @@ int main(int argc, char **argv) {
 	}
 	
 	//the sha engine requires data to be 64-byte aligned.
-	input = memalign(64, messageSize);
-	buffer = memalign(64, messageSize);
+	input = memalign(32, messageSize);
+	buffer = memalign(32, messageSize);
     iv = memalign(32, sizeof(initialIv));
 	if(input == NULL || buffer == NULL)
 	{
