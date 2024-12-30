@@ -1,4 +1,5 @@
-*.dol
-*.elf
+.vscode/
 build/
 bin/
+*.dol
+*.elf
