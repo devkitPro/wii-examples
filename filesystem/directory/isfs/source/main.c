@@ -294,146 +294,146 @@ static inline bool IsDir(DIR_ENTRY *entry) {
 // Chop off any double slashes (//) from a string.
 static inline void RemoveDoubleSlash(char *str)
 {
-	if(!str) return;
-	int count = 0;
-	const char *ptr = str;
-	while(*ptr != 0)
-	{
-		if(*ptr == '/' && ptr[1] == '/') {
-			ptr++;
-			continue;
-		}
-		str[count] = *ptr;
-		ptr++;
-		count++;
-	}
+    if(!str) return;
+    int count = 0;
+    const char *ptr = str;
+    while(*ptr != 0)
+    {
+        if(*ptr == '/' && ptr[1] == '/') {
+            ptr++;
+            continue;
+        }
+        str[count] = *ptr;
+        ptr++;
+        count++;
+    }
 
-	while(count > 2 && str[count-1] == '/') count--;
-	str[count] = 0;
+    while(count > 2 && str[count-1] == '/') count--;
+    str[count] = 0;
 }
 
 // Add a child entry to the main parent entry.
 static DIR_ENTRY *add_child_entry(DIR_ENTRY *dir, const char *name) {
     // If the children section is NULL, allocate one child entry.
-	if(!dir->children) dir->children = malloc(sizeof(DIR_ENTRY));
-    
+    if(!dir->children) dir->children = malloc(sizeof(DIR_ENTRY));
+
     // Reallocate the children array to fit one more child entry.
-	DIR_ENTRY *newChildren = realloc(dir->children, (dir->childCount + 1) * sizeof(DIR_ENTRY));
-	if (!newChildren) return NULL;
+    DIR_ENTRY *newChildren = realloc(dir->children, (dir->childCount + 1) * sizeof(DIR_ENTRY));
+    if (!newChildren) return NULL;
 
     // Zero out memory for additional children entries and update the directory's children pointer.
-	bzero(newChildren + dir->childCount, sizeof(DIR_ENTRY));
-	dir->children = newChildren;
+    bzero(newChildren + dir->childCount, sizeof(DIR_ENTRY));
+    dir->children = newChildren;
 
     // Get our new child as a pointer, while incrementing the parent child count.
-	DIR_ENTRY *child = &dir->children[dir->childCount++];
+    DIR_ENTRY *child = &dir->children[dir->childCount++];
 
     // Dump the new child name into the actual child.
-	child->name = strdup(name);
-	if (!child->name) return NULL;
+    child->name = strdup(name);
+    if (!child->name) return NULL;
 
     // Allocate space for the child's absolute path.
-	child->abspath = malloc(strlen(dir->abspath) + strlen(name) + 2);
-	if (!child->abspath) return NULL;
+    child->abspath = malloc(strlen(dir->abspath) + strlen(name) + 2);
+    if (!child->abspath) return NULL;
 
     // Set the child's absolute path, and remove double slashes.
-	sprintf(child->abspath, "%s/%s", dir->abspath, name);
-	RemoveDoubleSlash(child->abspath);
-	return child;
+    sprintf(child->abspath, "%s/%s", dir->abspath, name);
+    RemoveDoubleSlash(child->abspath);
+    return child;
 }
 
 // Read a parent directory.
 static bool ReadDirectory(DIR_ENTRY *parent) {
     // Don't proceed if parent or parent's absolute path is NULL.
-	if(!parent || !parent->abspath) return false;
-    
+    if(!parent || !parent->abspath) return false;
+
     // Have we already read this dir?
-	u32 fileCount;
-	if(parent->size != 0 && IsDir(parent))
-	{
-		fileCount = parent->size;
+    u32 fileCount;
+    if(parent->size != 0 && IsDir(parent))
+    {
+        fileCount = parent->size;
     } else
-	{
+    {
         // Read the directory file count.
-		s32 ret = ISFS_ReadDir(parent->abspath, NULL, &fileCount);
-		if (ret != ISFS_OK) {
-			return false;
-		}
-	}
+        s32 ret = ISFS_ReadDir(parent->abspath, NULL, &fileCount);
+        if (ret != ISFS_OK) {
+            return false;
+        }
+    }
 
     // Set newly discovered parent parameters.
-	parent->flags = FLAG_DIR;
-	parent->size = fileCount;
-	parent->childCount = 0;
+    parent->flags = FLAG_DIR;
+    parent->size = fileCount;
+    parent->childCount = 0;
 
     // Add a ./ and ../ if we aren't inside the root directory.
-	if(strcmp(parent->abspath, "/") != 0)
-	{
+    if(strcmp(parent->abspath, "/") != 0)
+    {
         // Add the ./
-		DIR_ENTRY *child = add_child_entry(parent, ".");
-		if (!child) return false;
-		child->flags = FLAG_DIR;
-		child->size = 0;
+        DIR_ENTRY *child = add_child_entry(parent, ".");
+        if (!child) return false;
+        child->flags = FLAG_DIR;
+        child->size = 0;
 
         // Add the ../
-		child = add_child_entry(parent, "..");
-		if (!child) return false;
-		child->flags = FLAG_DIR;
-		child->size = 0;
-	}
+        child = add_child_entry(parent, "..");
+        if (!child) return false;
+        child->flags = FLAG_DIR;
+        child->size = 0;
+    }
 
     // If we ACTUALLY HAVE FILES, proceed.
-	if (fileCount > 0)
-	{
+    if (fileCount > 0)
+    {
         // Create an aligned buffer for file names.
-		char *buffer = (char *) memalign(32, ISFS_MAXPATH * fileCount);
-		if(!buffer) return false;
+        char *buffer = (char *) memalign(32, ISFS_MAXPATH * fileCount);
+        if(!buffer) return false;
 
         // Read the parent directory to the name buffer.
-		s32 ret = ISFS_ReadDir(parent->abspath, buffer, &fileCount);
-		if (ret != ISFS_OK)
-		{
-			free(buffer);
-			return false;
-		}
+        s32 ret = ISFS_ReadDir(parent->abspath, buffer, &fileCount);
+        if (ret != ISFS_OK)
+        {
+            free(buffer);
+            return false;
+        }
 
         // Loop through each file count and add them as a child.
         // File names are read like aa|bb|cc| where | means \0
-		u32 fileNum;
-		char *name = buffer;
-		for (fileNum = 0; fileNum < fileCount; fileNum++)
-		{
+        u32 fileNum;
+        char *name = buffer;
+        for (fileNum = 0; fileNum < fileCount; fileNum++)
+        {
             // Create a child entry.
-			DIR_ENTRY *child = add_child_entry(parent, name);
-			if (!child)
-			{
-				free(buffer);
-				return false;
-			}
+            DIR_ENTRY *child = add_child_entry(parent, name);
+            if (!child)
+            {
+                free(buffer);
+                return false;
+            }
 
             // Set the position of the entry name to the next one.
-			name += strlen(name) + 1;
+            name += strlen(name) + 1;
 
             // Check to see how many entries are in the child (if any)
-			u32 childFileCount;
-			ret = ISFS_ReadDir(child->abspath, NULL, &childFileCount);
-			if (ret == ISFS_OK)
-			{
-				child->flags = FLAG_DIR;
-				child->size = childFileCount;
-			}
-			else // Assume it's a file instead.
-			{
+            u32 childFileCount;
+            ret = ISFS_ReadDir(child->abspath, NULL, &childFileCount);
+            if (ret == ISFS_OK)
+            {
+                child->flags = FLAG_DIR;
+                child->size = childFileCount;
+            }
+            else // Assume it's a file instead.
+            {
                 // Open the file, and read it's length.
-				s32 fd = ISFS_Open(child->abspath, ISFS_OPEN_READ);
-				if (fd >= 0) {
-					if (ISFS_GetFileStats(fd, &filest) == ISFS_OK)
-						child->size = filest.file_length;
-					ISFS_Close(fd);
-				}
-			}
-		}
-		free(buffer);
-	}
-	return true;
+                s32 fd = ISFS_Open(child->abspath, ISFS_OPEN_READ);
+                if (fd >= 0) {
+                    if (ISFS_GetFileStats(fd, &filest) == ISFS_OK)
+                        child->size = filest.file_length;
+                    ISFS_Close(fd);
+                }
+            }
+        }
+        free(buffer);
+    }
+    return true;
 }
