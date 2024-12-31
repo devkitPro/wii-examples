@@ -272,12 +272,10 @@ static void StopCritical(const char* msg, const char* running_func, const char* 
         s32 pressed[4]; // State on every remote.
 
         // Get the remote states.
-        for(int rmt = 0; rmt < 4; rmt++)
-            pressed[rmt] = WPAD_ButtonsDown(rmt);
+        for(int rmt = 0; rmt < 4; rmt++) pressed[rmt] = WPAD_ButtonsDown(rmt);
 
         // Check for home on each remote, and check reset button.
-        for(int rmt = 0; rmt < 4; rmt++)
-            if(pressed[rmt] & WPAD_BUTTON_HOME || SYS_ResetButtonDown()) break;
+        for(int rmt = 0; rmt < 4; rmt++) if(pressed[rmt] & WPAD_BUTTON_HOME || SYS_ResetButtonDown()) break;
         
         // Wait VSync.
         VIDEO_WaitVSync();
@@ -310,17 +308,14 @@ static inline void RemoveDoubleSlash(char *str)
 		count++;
 	}
 
-	while(count > 2 && str[count-1] == '/')
-		count--;
-
+	while(count > 2 && str[count-1] == '/') count--;
 	str[count] = 0;
 }
 
 // Add a child entry to the main parent entry.
 static DIR_ENTRY *add_child_entry(DIR_ENTRY *dir, const char *name) {
     // If the children section is NULL, allocate one child entry.
-	if(!dir->children)
-		dir->children = malloc(sizeof(DIR_ENTRY));
+	if(!dir->children) dir->children = malloc(sizeof(DIR_ENTRY));
     
     // Reallocate the children array to fit one more child entry.
 	DIR_ENTRY *newChildren = realloc(dir->children, (dir->childCount + 1) * sizeof(DIR_ENTRY));
@@ -350,8 +345,7 @@ static DIR_ENTRY *add_child_entry(DIR_ENTRY *dir, const char *name) {
 // Read a parent directory.
 static bool ReadDirectory(DIR_ENTRY *parent) {
     // Don't proceed if parent or parent's absolute path is NULL.
-	if(!parent || !parent->abspath)
-		return false;
+	if(!parent || !parent->abspath) return false;
     
     // Have we already read this dir?
 	u32 fileCount;
