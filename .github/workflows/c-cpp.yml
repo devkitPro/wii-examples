@@ -15,5 +15,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Setup DKP
       run: sudo apt update
+    - name: Install DKP
+      run: wget https://apt.devkitpro.org/install-devkitpro-pacman && chmod +x ./install-devkitpro-pacman && sudo ./install-devkitpro-pacman
     - name: make
       run: make
