@@ -54,17 +54,17 @@ static void Init();
 // Helper Functions.
 static void StopCritical(const char* msg, const char* running_func, const char* occuring_file, int lcall, uint32_t code);
 static void SetCursor(int x, int y);
-static void Set_Colors(Color background, Color foreground);
-static void Clear_Screen();
+static void SetColors(Color background, Color foreground);
+static void ClearScreen();
 
 // ISFS Directory Reading
-static inline bool is_dir(DIR_ENTRY *entry);
-static bool read_directory(DIR_ENTRY *parent);
+static inline bool IsDir(DIR_ENTRY *entry);
+static bool ReadDirectory(DIR_ENTRY *parent);
 
 // Print paths menu
 static void print_paths_menu(DIR_ENTRY* dir, int selected_index, int max_length) {
     // Reset Screen to Browse Neatly.
-    Clear_Screen();
+    ClearScreen();
     SetCursor(0,3);
 
     // Print App Title
@@ -76,6 +76,7 @@ static void print_paths_menu(DIR_ENTRY* dir, int selected_index, int max_length)
     if (dir == NULL) return;
     if (dir->children == NULL) return;
 
+    // Starting index to print entries.
     int start_index = 0;
 
     // If the total number of children is more than the max length, we adjust the start_index.
@@ -93,11 +94,11 @@ static void print_paths_menu(DIR_ENTRY* dir, int selected_index, int max_length)
 
     // Go through each entry from the start_index to the maximum of start_index + max_length
     for (int i = start_index; i < dir->childCount; i++) {
-        bool is_entry_dir = is_dir(&(dir->children[i]));
+        bool is_entry_dir = IsDir(&(dir->children[i]));
         bool is_selected  = (i == selected_index);
         
         // Set colors based on selection
-        if (is_selected) Set_Colors(WHITE, BLACK);
+        if (is_selected) SetColors(WHITE, BLACK);
         
         // Print the entry
         printf("%c%c%c %s\n",
@@ -108,7 +109,7 @@ static void print_paths_menu(DIR_ENTRY* dir, int selected_index, int max_length)
         );
 
         // Back to normal colors.
-        Set_Colors(BLACK, WHITE);
+        SetColors(BLACK, WHITE);
     }
 }
 
@@ -121,7 +122,7 @@ int main(int argc, char** argv) {
     DIR_ENTRY parent;
     parent.abspath = malloc(ISFS_MAXPATH);
     sprintf(parent.abspath, "/");
-    read_directory(&parent);
+    ReadDirectory(&parent);
 
     // Print list
     int selected_index = 0;
@@ -148,7 +149,7 @@ int main(int argc, char** argv) {
             else
                 selected_index++;
         } if(pressed & WPAD_BUTTON_A) {
-            if(is_dir(&(parent.children[selected_index])))
+            if(IsDir(&(parent.children[selected_index])))
             {
                 // Check for . and .. on parent.children[selected_index].name
                 if (strcmp(parent.children[selected_index].name, "..") == 0) {
@@ -167,7 +168,7 @@ int main(int argc, char** argv) {
                     sprintf(parent.abspath, "%s", parent.children[selected_index].abspath);
                 }
                 selected_index = 0;
-                read_directory(&parent);
+                ReadDirectory(&parent);
             }
         }
 
@@ -197,9 +198,9 @@ static void Init() {
 	if(rmode->viTVMode&VI_NON_INTERLACE) VIDEO_WaitVSync();
 
     // Jump to another IOS (Because some IOS's just don't like you, no offence).
-    Set_Colors(BLUE, WHITE);    // Fancy Colors.
-    Clear_Screen();             // Fill the screen with the color mode.
-    SetCursor(0,2);             // Reset cursor position.
+    SetColors(BLUE, WHITE);    // Fancy Colors.
+    ClearScreen();             // Fill the screen with the color mode.
+    SetCursor(0,2);            // Reset cursor position.
 
 
     // Get the better prefered IOS (Default 56).
@@ -219,9 +220,9 @@ static void Init() {
     if(init_res != ISFS_OK) StopCritical("Failed to initialize ISFS.\n", __FUNCTION__, __FILE__, __LINE__, init_res);
     
     // Welcome
-    Set_Colors(BLACK, WHITE);   // Default color mode.
-    Clear_Screen();             // Clear Screen.
-    SetCursor(0,2);             // Reset Cursor Position.
+    SetColors(BLACK, WHITE);   // Default color mode.
+    ClearScreen();             // Clear Screen.
+    SetCursor(0,2);            // Reset Cursor Position.
 }
 
 // Function to set the terminal cursor position at X,Y cordinates.
@@ -230,32 +231,32 @@ static void SetCursor(int x, int y) {
 }
 
 // Function to set background and foreground color on console.
-static void Set_Colors(Color background, Color foreground) {
+static void SetColors(Color background, Color foreground) {
     printf("\x1b[%dm", 40 + background); // BG
     printf("\x1b[%dm", 30 + foreground); // FG
 }
 
 // Function to clear the screen.
-static void Clear_Screen() {
+static void ClearScreen() {
     printf("\x1b[2J");
 }
 
 // Critical Error Display.
 static void StopCritical(const char* msg, const char* running_func, const char* occuring_file, int lcall, uint32_t code) {
     // Clear the display with blue.
-    Set_Colors(BLUE, WHITE);
-    Clear_Screen();
+    SetColors(BLUE, WHITE);
+    ClearScreen();
     SetCursor(0,2);
 
     // Error
     printf("DEMO ERROR 0x%04x:\n\n", code);
-    Set_Colors(BLACK, YELLOW);
+    SetColors(BLACK, YELLOW);
     printf(msg);
-    Set_Colors(BLUE, WHITE);
+    SetColors(BLUE, WHITE);
     printf("\n*DONT PANIC* If you see this, its nothing\nharmful, this in-fact is a safety measure taken to\nprevent damage to your console/emulator.\n");
     printf("\nPress HOME or RESET to exit.\n\n");
 
-    // Print Extra Info.
+    // Print Extra Info (Useful for debugging).
     printf("This error occured in '%s' (Called from L%d by '%s()')\nThis demo was built '%s %s', refer to source for debugging.\nBuilt by '%s'\n",
         occuring_file,
         lcall,
@@ -274,19 +275,21 @@ static void StopCritical(const char* msg, const char* running_func, const char* 
         for(int rmt = 0; rmt < 4; rmt++)
             pressed[rmt] = WPAD_ButtonsDown(rmt);
 
-        // Check for home on each remote.
+        // Check for home on each remote, and check reset button.
         for(int rmt = 0; rmt < 4; rmt++)
             if(pressed[rmt] & WPAD_BUTTON_HOME || SYS_ResetButtonDown()) break;
         
         // Wait VSync.
         VIDEO_WaitVSync();
     }
-    exit(code);
+
+    // Notify that the system is exiting.
     printf("\nEXITING...\n");
+    exit(code);
 }
 
 // Determine weather or not an entry is a directory.
-static inline bool is_dir(DIR_ENTRY *entry) {
+static inline bool IsDir(DIR_ENTRY *entry) {
 	return entry->flags & FLAG_DIR; // If the entry flags has the DIR flag, assume dir.
 }
 
@@ -345,14 +348,14 @@ static DIR_ENTRY *add_child_entry(DIR_ENTRY *dir, const char *name) {
 }
 
 // Read a parent directory.
-static bool read_directory(DIR_ENTRY *parent) {
+static bool ReadDirectory(DIR_ENTRY *parent) {
     // Don't proceed if parent or parent's absolute path is NULL.
 	if(!parent || !parent->abspath)
 		return false;
     
     // Have we already read this dir?
 	u32 fileCount;
-	if(parent->size != 0 && is_dir(parent))
+	if(parent->size != 0 && IsDir(parent))
 	{
 		fileCount = parent->size;
     } else
