@@ -21,3 +21,5 @@ jobs:
       run: sudo dkp-pacman -S wii-dev --noconfirm
     - name: make
       run: source /etc/profile.d/devkit-env.sh && make
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v4.5.0
