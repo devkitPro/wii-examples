@@ -18,6 +18,6 @@ jobs:
     - name: Install DKP
       run: wget https://apt.devkitpro.org/install-devkitpro-pacman && chmod +x ./install-devkitpro-pacman && sudo ./install-devkitpro-pacman
     - name: Setup Env
-      run: sudo dkp-pacman -S wii-dev
+      run: sudo dkp-pacman -S wii-dev --noconfirm
     - name: make
       run: make
