@@ -13,7 +13,6 @@ jobs:
 
     - name: Build
       run: |
-        sudo dkp-pacman -Syu
         make -j2
     
     - name: Upload  Build Artifacts
