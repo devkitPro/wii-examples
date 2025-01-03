@@ -24,10 +24,7 @@ INCLUDES	:=
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-BUILDH		:= $(shell uname -a | tr ' ' '_')
-BUILDU		:= $(shell whoami | tr ' ' '_')
-HOST_VALUE	:= $(BUILDH)_$(BUILDU)
-CFLAGS		= -g -O2 -Wall $(MACHDEP) $(INCLUDE) -D__HOST__=\"$(HOST_VALUE)\"
+CFLAGS		= -g -O2 -Wall $(MACHDEP) $(INCLUDE)
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
