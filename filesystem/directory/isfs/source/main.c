@@ -16,6 +16,9 @@
 
 // ISFS Directory Reading Definitions.
 #define FLAG_DIR 1                                  // Constant Value of a directory flag.
+#define FLAG_FILE 2                                 // Constant Value of a file flag.
+#define FLAG_NOACCESS 4                             // Constant Value to indicate no access.
+
 #define DIR_SEPARATOR '/'                           // Directory Seperator.
 static fstats filest __attribute__((aligned(32)));  // Aligned file status variable.
 
@@ -67,6 +70,10 @@ static inline bool IsDir(DIR_ENTRY *entry) {
 	return entry->flags & FLAG_DIR; // If the entry flags has the DIR flag, assume dir.
 }
 
+static inline bool HaveAccess(DIR_ENTRY *entry)
+{
+    return !(entry->flags & FLAG_NOACCESS);// If the entry flags has the noaccess flag we dont have access
+}
 
 // Chop off any double slashes (//) from a string.
 static inline void RemoveDoubleSlash(char *str)
@@ -107,6 +114,9 @@ static DIR_ENTRY *AddChildEntry(DIR_ENTRY *dir, const char *name)
     // Get our new child as a pointer, while incrementing the parent child count.
     DIR_ENTRY *child = &dir->children[dir->childCount++];
 
+    // Reset file access to no access by default
+    child->flags = FLAG_NOACCESS;
+
     // Dump the new child name into the actual child.
     child->name = strdup(name);
     if (!child->name) return NULL;
@@ -124,11 +134,11 @@ static DIR_ENTRY *AddChildEntry(DIR_ENTRY *dir, const char *name)
 // Read a parent directory.
 static bool ReadDirectory(DIR_ENTRY *parent) {
     // Don't proceed if parent or parent's absolute path is NULL.
-    if(!parent || !parent->abspath) return false;
+    if(!parent || !parent->abspath || !IsDir(parent)) return false;
 
     // if we have read the dir we set the size, if not we fetch the size
     u32 fileCount;
-    if(parent->size != 0 && IsDir(parent))
+    if(parent->size != 0)
         fileCount = parent->size;
     else if (ISFS_ReadDir(parent->abspath, NULL, &fileCount) != ISFS_OK)
         return false;
@@ -159,54 +169,56 @@ static bool ReadDirectory(DIR_ENTRY *parent) {
         return true;
     
     // Create an aligned buffer for file names.
-        char *buffer = (char *) memalign(32, ISFS_MAXPATH * fileCount);
-        if(!buffer) return false;
+    char *buffer = (char *) memalign(32, ISFS_MAXPATH * fileCount);
+    if(!buffer) return false;
 
-        // Read the parent directory to the name buffer.
-        s32 ret = ISFS_ReadDir(parent->abspath, buffer, &fileCount);
-        if (ret != ISFS_OK)
+    // Read the parent directory to the name buffer.
+    s32 ret = ISFS_ReadDir(parent->abspath, buffer, &fileCount);
+    if (ret != ISFS_OK)
+    {
+        free(buffer);
+        return false;
+    }
+
+    // Loop through each file count and add them as a child.
+    // File names are read like aa|bb|cc| where | means \0
+    u32 fileNum;
+    char *name = buffer;
+    for (fileNum = 0; fileNum < fileCount; fileNum++)
+    {
+        // Create a child entry.
+        DIR_ENTRY *child = AddChildEntry(parent, name);
+        if (!child)
         {
             free(buffer);
             return false;
         }
 
-        // Loop through each file count and add them as a child.
-        // File names are read like aa|bb|cc| where | means \0
-        u32 fileNum;
-        char *name = buffer;
-        for (fileNum = 0; fileNum < fileCount; fileNum++)
+        // Set the position of the entry name to the next one.
+        name += strlen(name) + 1;
+        
+        //if its a dir -> Check to see how many entries are in the child (if any)
+        //if its a file that we have access to -> get file size
+        u32 childFileCount;
+        ret = ISFS_ReadDir(child->abspath, NULL, &childFileCount);
+        if (ret == ISFS_OK)
         {
-            // Create a child entry.
-            DIR_ENTRY *child = AddChildEntry(parent, name);
-            if (!child)
-            {
-                free(buffer);
-                return false;
-            }
-
-            // Set the position of the entry name to the next one.
-            name += strlen(name) + 1;
-
-            // Check to see how many entries are in the child (if any)
-            u32 childFileCount;
-            ret = ISFS_ReadDir(child->abspath, NULL, &childFileCount);
-            if (ret == ISFS_OK)
-            {
-                child->flags = FLAG_DIR;
-                child->size = childFileCount;
-            }
-            else // Assume it's a file instead.
-            {
-                // Open the file, and read it's length.
-                s32 fd = ISFS_Open(child->abspath, ISFS_OPEN_READ);
-                if (fd >= 0) {
-                    if (ISFS_GetFileStats(fd, &filest) == ISFS_OK)
-                        child->size = filest.file_length;
-                    ISFS_Close(fd);
-                }
-            }
+            child->flags = FLAG_DIR;
+            child->size = childFileCount;
         }
-        free(buffer);
+        else // Assume it's a file instead.
+        {
+            // Open the file, and read it's length.
+            s32 fd = ISFS_Open(child->abspath, ISFS_OPEN_READ);
+            if (fd >= 0 && ISFS_GetFileStats(fd, &filest) == ISFS_OK) 
+            {
+                child->flags = FLAG_FILE;
+                child->size = filest.file_length;
+            }
+            ISFS_Close(fd);
+        }
+    }
+    free(buffer);
     return true;
 }
 
@@ -218,7 +230,7 @@ static void RenderDirectoryListing(DIR_ENTRY* dir, int selected_index, int max_l
 
     // Print App Title
     printf("ISFS NAND Browser Demo\n");
-    printf("[D] = Directory, [F] = File. <D/F> = Selected.\n");
+    printf("[D] = Directory, [F] = File, [U] = Unknown/No Access\n<D/F/U> = Selected.\n");
     printf("Press HOME to exit.\n\n");
 
     // Ensure we've been passed valid data.
@@ -243,9 +255,11 @@ static void RenderDirectoryListing(DIR_ENTRY* dir, int selected_index, int max_l
 
     // Go through each entry from the start_index to the maximum of start_index + max_length
     for (int i = start_index; i < dir->childCount; i++) {
-        bool is_entry_dir = IsDir(&(dir->children[i]));
         bool is_selected  = (i == selected_index);
-        
+        char entry_type = HaveAccess(&(dir->children[i])) ? 'F' : 'U';
+        if(IsDir(&(dir->children[i])))
+            entry_type = 'D';
+
         // Set colors based on selection
         if (is_selected) 
             SetColors(WHITE, BLACK);
@@ -253,7 +267,7 @@ static void RenderDirectoryListing(DIR_ENTRY* dir, int selected_index, int max_l
         // Print the entry
         printf("%c%c%c %s\n",
             is_selected     ? '<' : '[',
-            is_entry_dir    ? 'D' : 'F',
+            entry_type,
             is_selected     ? '>' : ']',
             dir->children[i].name
         );
@@ -341,6 +355,7 @@ int main(int argc, char** argv) {
     // Directory Entry
     DIR_ENTRY parent;
     parent.abspath = malloc(ISFS_MAXPATH);
+    parent.flags = FLAG_DIR;
     sprintf(parent.abspath, "/");
     ReadDirectory(&parent);
 
