@@ -12,12 +12,13 @@ static GXRModeObj *rmode = NULL;
 
 bool quitapp = false;
 
-void keyPress_cb(char sym) {
-	if (sym == 0x1b)
-		quitapp = true;
+void keyPress_cb(char sym)
+{
+	putchar(sym); // Display the pressed character
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 	// Initialise the video system
 	VIDEO_Init();
 
@@ -60,7 +61,8 @@ int main(int argc, char **argv) {
 	if (KEYBOARD_Init(keyPress_cb) == 0)
 		printf("keyboard initialised\n");
 
-	do {
+	do
+	{
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();
 
@@ -72,15 +74,23 @@ int main(int argc, char **argv) {
 		// Check for keyboard input
 		int key;
 
-		if ((key = getchar()) != EOF) {
+		if ((key = getchar()) != EOF)
+		{
+			// Check for escape key to exit
+			if (key == 0x1b)
+			{
+				quitapp = true;
+			}
+			else
+			{
+				// Print readable characters (ASCII > 31)
+				if (key > 31)
+					; // putchar is now in the callback
 
-			// Print readable characters (ASCII > 31)
-			if (key > 31)
-				putchar(key);
-
-			// Convert Enter key (ASCII 13) to a newline
-			if (key == 13)
-				putchar('\n');
+				// Convert Enter key (ASCII 13) to a newline
+				if (key == 13)
+					putchar('\n');
+			}
 		}
 
 		// We return to the launcher application via exit
