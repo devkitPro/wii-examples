@@ -14,7 +14,9 @@ bool quitapp = false;
 
 void keyPress_cb(char sym)
 {
-	putchar(sym); // Display the pressed character
+	// Check for escape key to exit
+	if (key == 0x1b)
+		quitapp = true;
 }
 
 int main(int argc, char **argv)
@@ -76,21 +78,13 @@ int main(int argc, char **argv)
 
 		if ((key = getchar()) != EOF)
 		{
-			// Check for escape key to exit
-			if (key == 0x1b)
-			{
-				quitapp = true;
-			}
-			else
-			{
-				// Print readable characters (ASCII > 31)
-				if (key > 31)
-					; // putchar is now in the callback
-
-				// Convert Enter key (ASCII 13) to a newline
-				if (key == 13)
-					putchar('\n');
-			}
+			// Display the pressed character
+			// Print readable characters (ASCII > 31)
+			if (key > 31)
+				putchar(sym);
+			// Convert Enter key (ASCII 13) to a newline
+			else if(key == 13)
+				putchar('\n');
 		}
 
 		// We return to the launcher application via exit
