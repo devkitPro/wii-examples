@@ -37,6 +37,17 @@ int	main(void) {
 	WPAD_Init();
 
 	screenMode = VIDEO_GetPreferredMode(NULL);
+	screenMode->viWidth = 704;
+	if (screenMode == &TVPal576IntDfScale || screenMode == &TVPal576ProgScale) 
+	{
+		screenMode->viXOrigin = (VI_MAX_WIDTH_PAL - screenMode->viWidth) / 2;
+		screenMode->viYOrigin = (VI_MAX_HEIGHT_PAL - screenMode->viHeight) / 2;
+	} 
+	else 
+	{
+		screenMode->viXOrigin = (VI_MAX_WIDTH_NTSC - screenMode->viWidth) / 2;
+		screenMode->viYOrigin = (VI_MAX_HEIGHT_NTSC - screenMode->viHeight) / 2;
+	}
 
 	frameBuffer	= MEM_K0_TO_K1(SYS_AllocateFramebuffer(screenMode));
 
@@ -71,7 +82,7 @@ int	main(void) {
 	guVector up =	{0.0F, 1.0F, 0.0F};
 	guVector look	= {0.0F, 0.0F, -1.0F};
 
-	guPerspective(projection, 60, 1.33F, 10.0F,	300.0F);
+	guPerspective(projection, 60, (CONF_GetAspectRatio() == CONF_ASPECT_16_9) ? 16.0F/9.0F : 4.0F/3.0F, 10.0F,	300.0F);
 	GX_LoadProjectionMtx(projection, GX_PERSPECTIVE);
 
 	GX_ClearVtxDesc();
