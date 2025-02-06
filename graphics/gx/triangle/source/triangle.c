@@ -37,17 +37,6 @@ int	main(void) {
 	WPAD_Init();
 
 	screenMode = VIDEO_GetPreferredMode(NULL);
-	screenMode->viWidth = 704;
-	if (screenMode == &TVPal576IntDfScale || screenMode == &TVPal576ProgScale) 
-	{
-		screenMode->viXOrigin = (VI_MAX_WIDTH_PAL - screenMode->viWidth) / 2;
-		screenMode->viYOrigin = (VI_MAX_HEIGHT_PAL - screenMode->viHeight) / 2;
-	} 
-	else 
-	{
-		screenMode->viXOrigin = (VI_MAX_WIDTH_NTSC - screenMode->viWidth) / 2;
-		screenMode->viYOrigin = (VI_MAX_HEIGHT_NTSC - screenMode->viHeight) / 2;
-	}
 
 	frameBuffer	= MEM_K0_TO_K1(SYS_AllocateFramebuffer(screenMode));
 
