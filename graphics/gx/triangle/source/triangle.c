@@ -71,7 +71,7 @@ int	main(void) {
 	guVector up =	{0.0F, 1.0F, 0.0F};
 	guVector look	= {0.0F, 0.0F, -1.0F};
 
-	guPerspective(projection, 60, 1.33F, 10.0F,	300.0F);
+	guPerspective(projection, 60, (CONF_GetAspectRatio() == CONF_ASPECT_16_9) ? 16.0F/9.0F : 4.0F/3.0F, 10.0F,	300.0F);
 	GX_LoadProjectionMtx(projection, GX_PERSPECTIVE);
 
 	GX_ClearVtxDesc();
