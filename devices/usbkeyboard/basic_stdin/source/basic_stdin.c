@@ -15,7 +15,7 @@ bool quitapp = false;
 void keyPress_cb(char sym)
 {
 	// Check for escape key to exit
-	if (key == 0x1b)
+	if (sym == 0x1b)
 		quitapp = true;
 }
 
@@ -81,7 +81,7 @@ int main(int argc, char **argv)
 			// Display the pressed character
 			// Print readable characters (ASCII > 31)
 			if (key > 31)
-				putchar(sym);
+				putchar(key);
 			// Convert Enter key (ASCII 13) to a newline
 			else if(key == 13)
 				putchar('\n');
