@@ -176,6 +176,7 @@ int main(int argc, char** argv) {
         printf("Setting up demo data[%d]...\n", idx);
         demo_data[idx].id = idx+1;          // Set ID
         demo_data[idx].tg = rand() % 10;    // Random Target Value.
+        demo_data[idx].var = 0;
     }
 
     // Area to store the return values of the threads.
