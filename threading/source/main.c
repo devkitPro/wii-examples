@@ -276,7 +276,7 @@ void Init() {
 	xfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 
 	// Initialise the console, required for printf
-	console_init(xfb,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
+	console_init(xfb,20,20,rmode->fbWidth-20,rmode->xfbHeight-20,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
 	//SYS_STDIO_Report(true);
 
 	// Set up the video registers with the chosen mode
@@ -284,6 +284,9 @@ void Init() {
 
 	// Tell the video hardware where our display memory is
 	VIDEO_SetNextFramebuffer(xfb);
+
+	// Clear the framebuffer
+	VIDEO_ClearFrameBuffer(rmode, xfb, COLOR_BLACK);
 
 	// Make the display visible
 	VIDEO_SetBlack(false);
