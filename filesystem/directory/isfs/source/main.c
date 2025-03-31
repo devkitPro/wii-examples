@@ -320,10 +320,11 @@ static void Init() {
 	// Please refer to templates to understand this.
 	rmode = VIDEO_GetPreferredMode(NULL);
 	xfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
-	console_init(xfb,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
+	console_init(xfb,20,20,rmode->fbWidth-20,rmode->xfbHeight-20,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
 	//SYS_STDIO_Report(true);
 	VIDEO_Configure(rmode);
 	VIDEO_SetNextFramebuffer(xfb);
+	VIDEO_ClearFrameBuffer(rmode, xfb, COLOR_BLACK);
 	VIDEO_SetBlack(false);
 	VIDEO_Flush();
 	VIDEO_WaitVSync();
