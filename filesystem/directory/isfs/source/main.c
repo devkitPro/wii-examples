@@ -354,11 +354,9 @@ int main(int argc, char** argv) {
     Init();
 
     // Directory Entry
-    DIR_ENTRY parent;
+    DIR_ENTRY parent = {0};
     parent.abspath = malloc(ISFS_MAXPATH);
     parent.flags = FLAG_DIR;
-    parent.children = NULL;
-    parent.size = 0;
     sprintf(parent.abspath, "/");
     ReadDirectory(&parent);
 
