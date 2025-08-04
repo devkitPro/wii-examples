@@ -8,7 +8,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 	source/main.c
 )
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
+target_compile_options(${PROJECT_NAME} PRIVATE -fexec-charset=CP437 -Wall)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   include
