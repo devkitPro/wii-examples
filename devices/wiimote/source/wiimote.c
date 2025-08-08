@@ -4,6 +4,7 @@
 #include <wiiuse/wpad.h>
 
 static void *xfb = NULL;
+static bool isSearching = false;
 static GXRModeObj *rmode = NULL;
 
 //---------------------------------------------------------------------------------
@@ -55,11 +56,13 @@ int main(int argc, char **argv) {
 	printf("Hello World!\n");
 	printf("Connect a wiimote by pressing a button\n");
 	printf("Or press the red sync button on the wii together with the wiimote!\n");
-
+	printf("to toggle searching for guest wiimotes, press +\n");
+	printf("to exit, press the home\n");
+	
 	while(1) 
 	{
-		//reset console location to 5th row
-		printf("\x1b[5;0H");
+		//reset console location to 8th row
+		printf("\x1b[8;0H");
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();
@@ -80,11 +83,45 @@ int main(int argc, char **argv) {
 		u32 pressed = WPAD_ButtonsDown(0) | WPAD_ButtonsDown(1) | WPAD_ButtonsDown(2) | WPAD_ButtonsDown(3);
 
 		// We return to the launcher application via exit
-		if ( pressed & WPAD_BUTTON_HOME ) exit(0);
+		if ( pressed & WPAD_BUTTON_HOME ) break;
+
+		if ( pressed & WPAD_BUTTON_PLUS )
+		{
+			// toggle searching for guest wiimotes
+			// these stay active and valid on the wii untill the wiimote subsystem is shutdown
+			// when searching is started, all wiimotes will disconnect and the system will start searching for new wiimotes
+			// the searching lasts for 60 seconds or so.
+			if(isSearching)
+				WPAD_StopSearch();
+			else
+				WPAD_Search();
+
+			isSearching = !isSearching;
+		}
 
 		// Wait for the next frame
 		VIDEO_WaitVSync();
 	}
+
+	// loop over all wiimotes and disconnect them
+	// this would shutdown the wiimotes and they would only respond after have pressed a button again
+	// under normal circumstances, this is not wanted and is why it's disabled here
+	// its more user friendly if the wiimote is left in a seeking state so that the launcher can pick it back up again
+#if 0
+	for (int i = 0;i < WPAD_MAX_WIIMOTES ;i++)
+	{
+		if(WPAD_Probe(i,0) < 0)
+			continue;
+		WPAD_Flush(i);
+		WPAD_Disconnect(i);
+	}
+#endif
+
+	// Shutdown the WPAD system
+	// Any wiimotes that are connected will be force disconnected
+	// this results in any connected wiimotes to be left in a seeking state
+	// in a seeking state the wiimotes will automatically reconnect when the subsystem is reinitialized
+	WPAD_Shutdown();
 
 	return 0;
 }
