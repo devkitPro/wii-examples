@@ -38,6 +38,9 @@ int main(int argc, char **argv) {
 
 	// Flush the video register changes to the hardware
 	VIDEO_Flush();
+	
+    // Clear framebuffer
+    VIDEO_ClearFrameBuffer(rmode,xfb,COLOR_BLACK);
 
 	// Wait for Video setup to complete
 	VIDEO_WaitVSync();
