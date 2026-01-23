@@ -61,7 +61,7 @@ void ParseScanBuff(u8* ScanBuff, u16 ScanBuffSize)
             ptr = (BSSDescriptor*)((u32)ptr + ptr->length*2);
         }
 
-        if(APs > 1) {
+        if(APs > 1 && APs > i + 1) {
             printf("\n\tPress A to get the next AP...");
             while(1) {
                 WPAD_ScanPads();
