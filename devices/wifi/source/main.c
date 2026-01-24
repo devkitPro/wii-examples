@@ -60,15 +60,6 @@ void ParseScanBuff(u8* ScanBuff, u16 ScanBuffSize)
             // Doubling ptr->length seems to match the BSSDescriptor length + IEs_length.
             ptr = (BSSDescriptor*)((u32)ptr + ptr->length*2);
         }
-
-        if(APs > 1 && APs > i + 1) {
-            printf("\n\tPress A to get the next AP...");
-            while(1) {
-                WPAD_ScanPads();
-                u32 pressed = WPAD_ButtonsDown(0);
-                if (pressed & WPAD_BUTTON_A) break;
-            }
-        }
     }
 }
 
@@ -79,7 +70,7 @@ int main(int argc, char *argv[]) {
 
     xfb = MEM_K0_TO_K1(SYS_AllocateFramebuffer(rmode));
 
-    console_init(xfb,20,20,rmode->fbWidth - 20,rmode->xfbHeight - 20,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
+    console_init(xfb,20,20,rmode->fbWidth,rmode->xfbHeight,rmode->fbWidth*VI_DISPLAY_PIX_SZ);
 
     VIDEO_Configure(rmode);
 
