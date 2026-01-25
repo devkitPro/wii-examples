@@ -66,7 +66,7 @@ int main(int argc, char **argv) {
 	MODPlay_SetVolume(&play,63,63);
 	MODPlay_Start(&play);
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();

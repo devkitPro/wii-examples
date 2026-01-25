@@ -216,7 +216,7 @@ int main( int argc, char **argv ){
 		particle_array[i].zg = 0.0f;
 	}
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		WPAD_ScanPads();
 		int pressed = WPAD_ButtonsDown(0);

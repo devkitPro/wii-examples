@@ -115,7 +115,7 @@ int main( int argc, char **argv ){
 	guVector Yaxis = {0,1,0};
 	guVector Xaxis = {1,0,0};
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		WPAD_ScanPads();
 

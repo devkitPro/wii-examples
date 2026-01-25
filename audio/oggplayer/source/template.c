@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
 
 	PlayOgg(sample_ogg, sample_ogg_size, 0, OGG_ONE_TIME);
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();

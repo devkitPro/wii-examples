@@ -86,7 +86,7 @@ int	main(void) {
 	GX_SetTevOrder(GX_TEVSTAGE0, GX_TEXCOORDNULL, GX_TEXMAP_NULL, GX_COLOR0A0);
 	GX_SetTevOp(GX_TEVSTAGE0, GX_PASSCLR);
 
-	while (1)
+	while(SYS_MainLoop())
 	{
 		guLookAt(view, &camera,	&up, &look);
 		GX_SetViewport(0,0,screenMode->fbWidth,screenMode->efbHeight,0,1);

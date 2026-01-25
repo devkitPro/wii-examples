@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
         printf ("network configuration failed!\n");
     }
 
-    while (1) {
+    while(SYS_MainLoop()) {
         VIDEO_WaitVSync();
         WPAD_ScanPads();
 

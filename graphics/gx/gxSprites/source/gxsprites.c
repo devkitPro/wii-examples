@@ -140,7 +140,7 @@ int main( int argc, char **argv ){
 			sprites[i].dy = -sprites[i].dy;
 	}
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		WPAD_ScanPads();
 

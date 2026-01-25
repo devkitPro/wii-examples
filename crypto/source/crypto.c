@@ -19,7 +19,7 @@ static const u32 expectedDecryptedSha1[4] 	= { 0xB3440B4A, 0xE59A2FB4, 0x1A52DEB
 static u32 hash[4] = {};
 void wait_for_input()
 {
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();

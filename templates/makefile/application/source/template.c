@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 
 	printf("Hello World!\n");
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		// Call WPAD_ScanPads each loop, this reads the latest controller states
 		WPAD_ScanPads();

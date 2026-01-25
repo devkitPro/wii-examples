@@ -88,7 +88,7 @@ int main( int argc, char **argv ){
 	guPerspective(perspective, 45, (f32)w/h, 0.1F, 300.0F);
 	GX_LoadProjectionMtx(perspective, GX_PERSPECTIVE);
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		WPAD_ScanPads();
 

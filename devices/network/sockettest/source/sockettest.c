@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 		printf ("network configuration failed!\n");
 	}
 
-	while(1) {
+	while(SYS_MainLoop()) {
 
 		VIDEO_WaitVSync();
 		WPAD_ScanPads();
@@ -115,13 +115,13 @@ void *httpd (void *arg) {
 				perror("listen");
 			} else {
 
-				while(1) {
+				while(SYS_MainLoop()) {
 
 					csock = accept (sock, (struct sockaddr *) &client, &clientlen);
 
 					if ( csock < 0 ) {
 						perror("accept");
-						while(1);
+						continue;
 					}
 
 					printf("Connecting port %d from %s\n", client.sin_port, inet_ntoa(client.sin_addr));

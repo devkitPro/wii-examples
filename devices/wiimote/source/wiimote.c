@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	printf("to toggle searching for guest wiimotes, press +\n");
 	printf("to exit, press the home\n");
 	
-	while(1) 
+	while(SYS_MainLoop()) 
 	{
 		//reset console location to 8th row
 		printf("\x1b[8;0H");
