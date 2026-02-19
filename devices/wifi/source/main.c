@@ -46,8 +46,30 @@ void ParseScanBuff(u8* ScanBuff, u16 ScanBuffSize)
             break;
         }
         printf("\n\tChannel : %d", ptr->channel);
-        printf("\n\tIs Encrypted? %s\n", ptr->Capabilities & CAPAB_SECURED_FLAG ? "Yes" : "No");
+
+        // We get the security options by calling WD_GetSecurity, which
+        // will do some parsing to the IEs if the Secured capability flag is enabled.
         
+        u8 Security = WD_GetSecurity(ptr);
+        printf("\n\tSecurity : %X ", Security);
+
+        if(Security != WD_OPEN) {
+            if(Security & WD_WEP) {
+                printf("WEP ");
+            }
+            if(Security & WD_WPA_AES) {
+                printf("WPA-AES ");
+            }
+
+            if(Security & WD_WPA_TKIP)
+                printf("WPA-TKIP ");
+
+            if(Security & WD_WPA2_AES)
+                printf("WPA2-AES ");
+
+            if(Security & WD_WPA2_TKIP)
+                printf("WPA2-TKIP ");            
+        }        
         // Sometimes length can be 0, which is wrong.
         // And in that case we can use ptr->IEs_length to get the correct length. 
         if (ptr->length == 0) {
