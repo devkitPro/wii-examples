@@ -364,7 +364,7 @@ int main(int argc, char** argv) {
     RenderDirectoryListing(&parent, selected_index, 20);
 
     // Main Loop (Watchin for button presses).
-    while(true) {
+    while(SYS_MainLoop()) {
         // Scan WPAD
         WPAD_ScanPads();
         s32 pressed = WPAD_ButtonsDown(WPAD_CHAN_0);

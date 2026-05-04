@@ -262,7 +262,7 @@ int main(int argc, char **argv)
     setup_font();
     setup_viewport();
 
-    while (true) {
+    while (SYS_MainLoop()) {
         WPAD_ScanPads();
 
         u32 pressed = WPAD_ButtonsDown(0);

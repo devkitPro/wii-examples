@@ -50,7 +50,7 @@ static void* main_thread(void* arg) {
 
     // Main Thread Loop
     bool quit=false;
-    while(!quit) {
+    while(!quit && SYS_MainLoop()) {
         // Scan WPAD
         WPAD_ScanPads();
         s32 pressed = WPAD_ButtonsDown(WPAD_CHAN_0);

@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 
 		// Wait for the next frame
 		VIDEO_WaitVSync();
-	} while (!quitapp);
+	} while (!quitapp && SYS_MainLoop());
 
 	return 0;
 }
