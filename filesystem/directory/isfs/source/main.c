@@ -383,7 +383,7 @@ int main(int argc, char** argv) {
                 selected_index = parent.childCount-1;
             else
                 selected_index++;
-        } if((pressed & WPAD_BUTTON_A) && !IsDir(&(parent.children[selected_index]))) {
+        } if((pressed & WPAD_BUTTON_A) && IsDir(&(parent.children[selected_index]))) {
             // Check for . and .. on parent.children[selected_index].name
             if (strcmp(parent.children[selected_index].name, "..") == 0) {
                 // Chop off the last directory if it's ".."
